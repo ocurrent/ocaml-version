@@ -1,4 +1,4 @@
-## ocaml-version - Manipulate, parse and generate OCaml version strings
+## ocaml-version -- Manipulate, parse and generate OCaml version strings
 
 This library provides facilities to parse version numbers of the OCaml
 compiler, and enumerates the various official OCaml releases and configuration

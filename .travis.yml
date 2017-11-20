@@ -5,7 +5,7 @@ language: c
 script: bash -ex ./.docker-run.sh
 env:
   global:
-  - OCAML_VERSIONS="4.02.3 4.03.0 4.04.2 4.05.0 4.06.0"
+  - OCAML_VERSIONS="4.03.0 4.04.2 4.05.0 4.06.0"
   matrix:
   - DISTRO="debian-9"
   - DISTRO="alpine-3.6"

@@ -7,7 +7,6 @@ license: "ISC"
 dev-repo: "https://github.com/avsm/ocaml-version.git"
 bug-reports: "https://github.com/avsm/ocaml-version/issues"
 tags: ["org:ocamllabs"]
-available: [ ocaml-version >= "4.02.3"]
 depends: [
   "jbuilder" {build & >="1.0+beta10"}
 ]
@@ -15,3 +14,4 @@ build: [
   ["jbuilder" "subst" "-p" name "--name" name] {pinned}
   ["jbuilder" "build" "-p" name "-j" jobs]
 ]
+available: [ ocaml-version >= "4.03.0"]
