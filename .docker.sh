@@ -21,5 +21,5 @@ for v in $VERSIONS; do
   opam install --deps-only -t --switch $v .
 done
 
-jbuilder runtest --workspace jbuild-workspace.dev
+jbuilder build --workspace jbuild-workspace.dev
 rm -f jbuild-workspace.dev

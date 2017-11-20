@@ -87,6 +87,9 @@ val arch_of_string : string -> (arch, [> `Msg of string ]) result
     same architecture.  For example, both [aarch64] and [arm64]
     are parsed into {!`Aarch64}. *)
 
+val arch_of_string_exn: string -> arch
+(** [arch_of_string_exn t] is the same as {!arch_of_string},
+    except that it raises [Invalid_argument] in case of error. *)
 
 (** {2 Accessors} *)
 

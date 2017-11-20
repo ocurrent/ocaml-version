@@ -17,10 +17,10 @@
 type t = { major: int; minor: int; patch: int option; extra: string option }
 let v ?patch ?extra major minor = { major; minor; patch; extra }
 
-let major { major } = major
-let minor { minor } = minor
-let patch { patch } = patch
-let extra { extra } = extra
+let major { major; _ } = major
+let minor { minor; _ } = minor
+let patch { patch; _ } = patch
+let extra { extra; _ } = extra
 
 let to_string ?(sep='+') =
   function
@@ -43,11 +43,11 @@ let parse s =
 
 let of_string s =
   try Ok (parse s) with
-  | exn -> Error (`Msg (Printf.sprintf "Unable to parse OCaml version '%s'" s))
+  | _ -> Error (`Msg (Printf.sprintf "Unable to parse OCaml version '%s'" s))
 
 let of_string_exn s =
   try parse s with
-  | exn -> raise (Invalid_argument (Printf.sprintf "Unable to parse OCaml version '%s'" s))
+  | _ -> raise (Invalid_argument (Printf.sprintf "Unable to parse OCaml version '%s'" s))
 
 let pp ppf v = Format.pp_print_string ppf (to_string v)
 
@@ -145,13 +145,12 @@ module Has = struct
   let bytes v =
     match compare Since.bytes v with
     |(-1) | 0 -> true
-    |n -> false
+    |_ -> false
 
   let arch (a:arch) v =
     match compare (Since.arch a) v with
     |(-1) | 0 -> true
-    |n -> false
-
+    |_ -> false
 end
 
 module Opam = struct
@@ -185,5 +184,5 @@ module Opam = struct
   let variant_switches t =
     let default_variant = default_variant t in
     switches t |>
-    List.filter (fun {extra} -> extra <> default_variant)
+    List.filter (fun {extra; _} -> extra <> default_variant)
 end
