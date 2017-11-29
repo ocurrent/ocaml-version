@@ -203,7 +203,7 @@ module Releases : sig
   (** [latest] is the most recent stable release of OCaml. *)
 
   val recent : t list
-  (** [recent] is the last four releases of OCaml, with each at the latest patch level.
+  (** [recent] is the last five releases of OCaml, with each at the latest patch level.
     This is the set that is most reliably tested in the opam package repository. *)
 
   val recent_with_dev : t list

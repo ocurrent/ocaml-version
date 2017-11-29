@@ -104,7 +104,7 @@ module Releases = struct
   let all = [ v4_00; v4_01; v4_02; v4_03;
     v4_04; v4_05; v4_06 ]
 
-  let recent = [ v4_03; v4_04; v4_05; v4_06 ]
+  let recent = [ v4_02; v4_03; v4_04; v4_05; v4_06 ]
 
   let latest = v4_06
 
