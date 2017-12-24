@@ -66,7 +66,7 @@ val pp : Format.formatter -> t -> unit
 
 type arch = [ `X86_64 | `Aarch64 ]
 (** Type of CPU architectures.
-    @todo This is currently an incomplete list, and lists just
+    TODO: This is currently an incomplete list, and lists just
     those used by the opam test systems. Contributions welcome
     to complete it. *)
 

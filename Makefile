@@ -4,6 +4,9 @@
 build:
 	jbuilder build @install --dev
 
+doc:
+	jbuilder build @doc
+
 test:
 	jbuilder runtest
 
