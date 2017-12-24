@@ -15,3 +15,20 @@ functionality:
 
 Browse the [API documentation](http://docs.mirage.io/ocaml-version) for more
 details.
+
+### Further information
+
+- **Discussion:** Post on <https://discuss.ocaml.org/> with the `ocaml` tag under
+  the Ecosystem category.
+- **Bugs:** <https://github.com/avsm/ocaml-version/issues>
+- **Docs:** <http://docs.mirage.io/ocaml-version>
+
+Contributions are very welcome.  Please see the overall TODO list below, or
+please get in touch with any particular comments you might have.
+
+### TODO 
+
+- Complete the architecture set from the officially supported compilers.
+- Add more features to the opam variants list (such as `Since.safe_string`)
+- Generate the core opam compiler package set purely from this library, so that
+  it remains in sync with the library description.
