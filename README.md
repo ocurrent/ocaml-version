@@ -1,5 +1,5 @@
-ocaml-version -- Manipulate, parse and generate OCaml version strings
-----------------------------------------------------------------------
+ocaml-version -- Manipulate, parse and generate OCaml compiler version strings
+------------------------------------------------------------------------------
 
 This library provides facilities to parse version numbers of the OCaml
 compiler, and enumerates the various official OCaml releases and configuration
@@ -9,8 +9,8 @@ OCaml version numbers are of the form `major.minor.patch+extra`, where the
 `patch` and `extra` fields are optional.  This library offers the following
 functionality:
 
-- Functions to parse and serialise OCaml version numbers.
-- Enumeration of official OCaml version releases.
+- Functions to parse and serialise OCaml compiler version numbers.
+- Enumeration of official OCaml compiler version releases.
 - Test compiler versions for a particular feature (e.g. the `bytes` type)
 - [opam](https://opam.ocaml.org) compiler switch enumeration.
 
