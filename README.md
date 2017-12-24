@@ -1,4 +1,5 @@
-## ocaml-version -- Manipulate, parse and generate OCaml version strings
+ocaml-version -- Manipulate, parse and generate OCaml version strings
+----------------------------------------------------------------------
 
 This library provides facilities to parse version numbers of the OCaml
 compiler, and enumerates the various official OCaml releases and configuration
@@ -25,6 +26,8 @@ details.
 
 Contributions are very welcome.  Please see the overall TODO list below, or
 please get in touch with any particular comments you might have.
+
+[![Build Status](https://travis-ci.org/avsm/ocaml-version.svg?branch=master)](https://travis-ci.org/avsm/ocaml-version)
 
 ### TODO 
 
