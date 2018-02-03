@@ -116,8 +116,13 @@ val extra : t -> string option
 
 val with_variant : t -> string option -> t
 (** [with_variant t extra] will return a fresh value with
-    the extra version information in the OCaml string to
+    the extra version information in [t] to
     [extra], and remove it if [None] is supplied. *)
+
+val with_patch : t -> int option -> t
+(** [with_patch t patch] will return a fresh value with
+    the patch number in [t] to [patch], and remove it if [None]
+    is supplied. *)
 
 (** {2 Constants } *)
  
