@@ -188,6 +188,9 @@ module Releases : sig
   val v4_06_0 : t
   (** Version 4.06.0 *)
 
+  val v4_06_1 : t
+  (** Version 4.06.1 *)
+
   val v4_06 : t
   (** Latest release in the 4.06.x series *)
 
