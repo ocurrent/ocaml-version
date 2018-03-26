@@ -174,16 +174,24 @@ module Opam = struct
     | 4,3 -> None
     | _ -> None
 
+  let default_switch t =
+    { t with extra = default_variant t }
+
   let switches t =
     match default_variant t with
     | None -> { t with extra = None } :: (List.map (fun e -> { t with extra = Some e}) (variants t))
     | Some _ -> List.map (fun e -> { t with extra = Some e }) (variants t)
 
-  let default_switch t =
-    { t with extra = default_variant t }
-
   let variant_switches t =
     let default_variant = default_variant t in
     switches t |>
     List.filter (fun {extra; _} -> extra <> default_variant)
+ 
+  module V2 = struct
+    let package t =
+      match t.extra with
+      | None -> "ocaml-base-compiler." ^ (to_string t)
+      | Some _ -> "ocaml-variants." ^ (to_string t)
+  end
+
 end

@@ -244,20 +244,6 @@ end
     These are available from the public {{:https://github.com/ocaml/opam-repository}opam-repository}. *)
 module Opam : sig
 
-  val switches : t -> t list
-  (** [switches t] lists all the available opam switches for compiler version [t].
-    This list includes the default compiler, and any available variants such as
-    [flambda]. *)
-
-  val default_switch : t -> t
-  (** [default_switch t] is the name of the switch of the stock version of [t].
-    This is normally just the version number, but can include an extra version
-    string such as [trunk] for development versions of the compiler. *)
-
-  val variant_switches : t -> t list
-  (** [variant_switches t] lists all the non-default switch versions available
-    for compiler version [t].  This filters out the default variant of the compiler. *)
-
   val variants : t -> string list
   (** [variants t] lists the compiler variants that are available in
     opam for [t] strings. This is returned as a string that can be passed to
@@ -265,9 +251,26 @@ module Opam : sig
 
   val default_variant : t -> string option
   (** [default_variant t] returns [Some v] if a variant exists by
-   default for version [t].  This is typically true for development
-   versions of the compiler that have a branch name such as [trunk]
-   appended to their switch name.  {!default_switch} combines this into a
-   full OCaml version. *)
+    default for version [t].  This is typically true for development
+    versions of the compiler that have a branch name such as [trunk]
+    appended to their switch name.  {!default_switch} combines this into a
+    full OCaml version. *)
 
+  val default_switch : t -> t
+  (** [default_switch t] is the name of the switch of the stock version of [t].
+    This is normally just the version number, but can include an extra version
+    string such as [trunk] for development versions of the compiler. *)
+
+  val switches : t -> t list
+  (** [switches t] lists all the available opam switches for compiler version [t].
+    This list includes the default compiler, and any available variants such as
+    [flambda]. *)
+
+  val variant_switches : t -> t list
+    (** [variant_switches t] lists all the non-default switch versions available
+      for compiler version [t].  This filters out the default variant of the compiler. *)
+
+  module V2 : sig
+    val package : t -> string
+  end
 end
