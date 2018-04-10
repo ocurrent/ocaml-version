@@ -1,6 +1,7 @@
 ## v0.3.0
 
 * Add OCaml 4.06.1 release.
+* Add metadata for OCaml 4.08 development.
 
 ## v0.2.0
 

@@ -159,6 +159,7 @@ module Opam = struct
 
   let variants {major; minor; _} =
     match major,minor with
+    | 4,8 -> ["trunk";"trunk+afl";"trunk+flambda"]
     | 4,7 -> ["trunk";"trunk+afl";"trunk+flambda"]
     | 4,6 -> ["afl";"flambda";"default-unsafe-string";"force-safe-string"]
     | 4,5 -> ["afl";"flambda"]
@@ -168,6 +169,7 @@ module Opam = struct
 
   let default_variant {major; minor; _} =
     match major,minor with
+    | 4,8 -> Some "trunk"
     | 4,7 -> Some "trunk"
     | 4,6 -> None
     | 4,5 -> None
