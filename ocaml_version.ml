@@ -97,20 +97,21 @@ module Releases = struct
   let v4_06 = v4_06_1
 
   let v4_07_0 = of_string_exn "4.07.0"
+  let v4_07 = v4_07_0
 
   let all_patches = [
     v4_00_1; v4_01_0; v4_02_0; v4_02_1; v4_02_2;
     v4_02_3; v4_03_0; v4_04_0; v4_04_1; v4_04_2;
-    v4_05_0; v4_06_0; v4_06_1 ]
+    v4_05_0; v4_06_0; v4_06_1; v4_07_0 ]
 
   let all = [ v4_00; v4_01; v4_02; v4_03;
-    v4_04; v4_05; v4_06 ]
+    v4_04; v4_05; v4_06; v4_07 ]
 
-  let recent = [ v4_02; v4_03; v4_04; v4_05; v4_06 ]
+  let recent = [ v4_02; v4_03; v4_04; v4_05; v4_06; v4_07 ]
 
   let latest = v4_06
 
-  let dev = [ v4_07_0 ]
+  let dev = [ ]
 
   let recent_with_dev = List.concat [recent;dev]
 
@@ -160,7 +161,7 @@ module Opam = struct
   let variants {major; minor; _} =
     match major,minor with
     | 4,8 -> ["trunk";"trunk+afl";"trunk+flambda"]
-    | 4,7 -> ["trunk";"trunk+afl";"trunk+flambda"]
+    | 4,7 -> ["beta2";"beta2+afl";"beta2+flambda";"beta2+default-unsafe-string"]
     | 4,6 -> ["afl";"flambda";"default-unsafe-string";"force-safe-string"]
     | 4,5 -> ["afl";"flambda"]
     | 4,4 -> ["flambda"]
@@ -170,7 +171,7 @@ module Opam = struct
   let default_variant {major; minor; _} =
     match major,minor with
     | 4,8 -> Some "trunk"
-    | 4,7 -> Some "trunk"
+    | 4,7 -> Some "beta2"
     | 4,6 -> None
     | 4,5 -> None
     | 4,4 -> None
