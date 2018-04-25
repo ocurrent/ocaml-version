@@ -139,7 +139,7 @@ module Since = struct
 
   let arch (a:arch) =
     match a with
-    | `Aarch64 -> Releases.v4_03_0
+    | `Aarch64 -> Releases.v4_05_0
     | `X86_64 -> Releases.v4_00_0 (* TODO obviously earlier *)
 end
 
