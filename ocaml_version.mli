@@ -19,8 +19,6 @@
     These are of the form [major.minor.patch+extra], where the
     [patch] and [extra] fields are optional.  *)
 
-(** {2 Core types and parsers and serializers} *)
-
 type t
 (** Type of an OCaml version string *)
 
@@ -30,6 +28,8 @@ val v : ?patch:int -> ?extra:string -> int -> int -> t
     [patch] and [extra] indicators are optional, but it is
     conventional to include a [patch] value of 0 for most
     recent OCaml releases. *)
+
+(** {2 Parsers and serializers} *)
 
 val to_string : ?sep:char -> t -> string
 (** [to_string ?sep t] will convert the version [t] into
@@ -60,7 +60,7 @@ val pp : Format.formatter -> t -> unit
 (** [pp fmt t] will output a human-readable version string of
     [t] to the [fmt] formatter. *)
 
-(** {3 Architecture Support }
+(** {2 Architecture Support }
     These definitions cover the CPU architectures that OCaml
     runs and is supported on. *)
 
