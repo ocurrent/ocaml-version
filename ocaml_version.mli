@@ -1,4 +1,4 @@
-(* Copyright (c) 2017 Anil Madhavapeddy <anil@recoil.org>
+(* Copyright (c) 2017-2018 Anil Madhavapeddy <anil@recoil.org>
  *
  * Permission to use, copy, modify, and distribute this software for any
  * purpose with or without fee is hereby granted, provided that the above
@@ -270,10 +270,12 @@ module Opam : sig
     [flambda]. *)
 
   val variant_switches : t -> t list
-    (** [variant_switches t] lists all the non-default switch versions available
-      for compiler version [t].  This filters out the default variant of the compiler. *)
+  (** [variant_switches t] lists all the non-default switch versions available
+    for compiler version [t].  This filters out the default variant of the compiler. *)
 
+  (** Opam 2.0 functions *)
   module V2 : sig
     val package : t -> string
+    (** [package t] returns the opam2 package for that compiler version. *)
   end
 end
