@@ -108,13 +108,13 @@ module Releases = struct
     v4_05_0; v4_06_0; v4_06_1; v4_07_0; v4_08_0 ]
 
   let all = [ v4_00; v4_01; v4_02; v4_03;
-    v4_04; v4_05; v4_06; v4_07; v4_08_0 ]
+    v4_04; v4_05; v4_06; v4_07; v4_08 ]
 
   let recent = [ v4_03; v4_04; v4_05; v4_06; v4_07 ]
 
   let latest = v4_06
 
-  let dev = [ v4_08_0 ]
+  let dev = [ v4_08 ]
 
   let recent_with_dev = List.concat [recent;dev]
 
