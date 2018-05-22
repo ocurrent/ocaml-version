@@ -66,6 +66,7 @@ let sys_version = of_string_exn Sys.ocaml_version
 
 let with_variant t extra = { t with extra }
 let with_patch t patch = { t with patch }
+let without_patch t = { t with patch=None }
 
 module Releases = struct
   let v4_00_0 = of_string_exn "4.00.0"

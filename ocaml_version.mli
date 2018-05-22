@@ -124,6 +124,13 @@ val with_patch : t -> int option -> t
     the patch number in [t] to [patch], and remove it if [None]
     is supplied. *)
 
+val without_patch : t -> t
+(** [without_patch t] is as {!with_patch} [t None]. It removes
+    the least significant number from the version string.
+    This is useful for the Docker OCaml containers, which are
+    all named without a patch number and compiled using the
+    latest patch release (e.g. [4.06] instead of [4.06.1]). *)
+
 (** {2 Constants } *)
  
 val sys_version : t

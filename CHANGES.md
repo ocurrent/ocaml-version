@@ -2,6 +2,7 @@
 
 * Add OCaml 4.06.1 release.
 * Add metadata for OCaml 4.08 development.
+* Add an Opam.V2 module for opam 2.0 package names for compilers.
 
 ## v0.2.0
 
