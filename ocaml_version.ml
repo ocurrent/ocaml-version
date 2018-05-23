@@ -121,16 +121,18 @@ module Releases = struct
 
 end
 
-type arch = [`X86_64 | `Aarch64 ]
-let arches = [ `X86_64; `Aarch64 ]
+type arch = [`X86_64 | `Aarch64 | `Ppc64le ]
+let arches = [ `X86_64; `Aarch64; `Ppc64le ]
 
 let string_of_arch = function
   | `Aarch64 -> "arm64"
   | `X86_64 -> "amd64"
+  | `Ppc64le -> "ppc64le"
 
 let arch_of_string = function
   | "arm64" | "aarch64" -> Ok `Aarch64
   | "amd64" | "x86_64" -> Ok `X86_64
+  | "ppc64le" -> Ok `Ppc64le
   | arch -> Error (`Msg ("Unknown architecture " ^ arch))
 
 let arch_of_string_exn a =
@@ -144,6 +146,7 @@ module Since = struct
   let arch (a:arch) =
     match a with
     | `Aarch64 -> Releases.v4_05_0
+    | `Ppc64le -> Releases.v4_06_0
     | `X86_64 -> Releases.v4_00_0 (* TODO obviously earlier *)
 end
 

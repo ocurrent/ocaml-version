@@ -64,7 +64,7 @@ val pp : Format.formatter -> t -> unit
     These definitions cover the CPU architectures that OCaml
     runs and is supported on. *)
 
-type arch = [ `X86_64 | `Aarch64 ]
+type arch = [ `X86_64 | `Aarch64 | `Ppc64le ]
 (** Type of CPU architectures.
     TODO: This is currently an incomplete list, and lists just
     those used by the opam test systems. Contributions welcome

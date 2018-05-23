@@ -1,3 +1,7 @@
+## v0.3.0
+
+* Add PowerPC (ppc64le) architecture.
+
 ## v0.2.0 (22/05/2018)
 
 * Add OCaml 4.06.1 release.
