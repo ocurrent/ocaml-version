@@ -1,4 +1,4 @@
-## v0.3.0 (07/06/2018)
+## v0.3.0 (07/06/2018)
 
 * Add PowerPC (ppc64le) architecture.
 
