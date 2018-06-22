@@ -1,3 +1,7 @@
+## v0.4.0
+
+* Add 4.07+rc1 information.
+
 ## v0.3.0 (07/06/2018)
 
 * Add PowerPC (ppc64le) architecture.
