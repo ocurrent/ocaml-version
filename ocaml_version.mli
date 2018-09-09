@@ -64,7 +64,7 @@ val pp : Format.formatter -> t -> unit
     These definitions cover the CPU architectures that OCaml
     runs and is supported on. *)
 
-type arch = [ `X86_64 | `Aarch64 | `Ppc64le ]
+type arch = [ `X86_64 | `Aarch64 | `Aarch32 | `Ppc64le ]
 (** Type of CPU architectures.
     TODO: This is currently an incomplete list, and lists just
     those used by the opam test systems. Contributions welcome
@@ -200,6 +200,12 @@ module Releases : sig
 
   val v4_06 : t
   (** Latest release in the 4.06.x series *)
+
+  val v4_07_0 : t
+  (** Version 4.07.0 *)
+
+  val v4_07 : t
+  (** Latest release in the 4.07.x series *)
 
   val all_patches : t list
   (** [all_patches] is an enumeration of all OCaml releases, including every patch release.

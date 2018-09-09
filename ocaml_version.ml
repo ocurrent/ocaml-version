@@ -113,7 +113,7 @@ module Releases = struct
 
   let recent = [ v4_03; v4_04; v4_05; v4_06; v4_07 ]
 
-  let latest = v4_06
+  let latest = v4_07
 
   let dev = [ v4_08 ]
 
@@ -121,17 +121,19 @@ module Releases = struct
 
 end
 
-type arch = [`X86_64 | `Aarch64 | `Ppc64le ]
-let arches = [ `X86_64; `Aarch64; `Ppc64le ]
+type arch = [`X86_64 | `Aarch64 | `Ppc64le | `Aarch32 ]
+let arches = [ `X86_64; `Aarch64; `Ppc64le; `Aarch32 ]
 
 let string_of_arch = function
   | `Aarch64 -> "arm64"
+  | `Aarch32 -> "arm32v7"
   | `X86_64 -> "amd64"
   | `Ppc64le -> "ppc64le"
 
 let arch_of_string = function
   | "arm64" | "aarch64" -> Ok `Aarch64
   | "amd64" | "x86_64" -> Ok `X86_64
+  | "arm32" | "arm32v7" | "aarch32" -> Ok `Aarch32
   | "ppc64le" -> Ok `Ppc64le
   | arch -> Error (`Msg ("Unknown architecture " ^ arch))
 
@@ -145,6 +147,7 @@ module Since = struct
 
   let arch (a:arch) =
     match a with
+    | `Aarch32 -> Releases.v4_06_0
     | `Aarch64 -> Releases.v4_05_0
     | `Ppc64le -> Releases.v4_06_0
     | `X86_64 -> Releases.v4_00_0 (* TODO obviously earlier *)

@@ -1,3 +1,8 @@
+## dev
+
+* Add ARM32 (aarch32, arm32v7) architecture.
+* Add OCaml 4.07.0 release.
+
 ## v0.3.0 (07/06/2018)
 
 * Add PowerPC (ppc64le) architecture.
