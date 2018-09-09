@@ -1,7 +1,11 @@
 ## dev
 
 * Add ARM32 (aarch32, arm32v7) architecture.
-* Add OCaml 4.07.0 release.
+* Add more OCaml 4.07.0 functions and mark it as latest stable.
+
+## v0.4.0
+
+* Add 4.07.0 release information.
 
 ## v0.3.0 (07/06/2018)
 
