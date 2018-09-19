@@ -12,7 +12,7 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *
- *)
+*)
 
 type t = { major: int; minor: int; patch: int option; extra: string option }
 let v ?patch ?extra major minor = { major; minor; patch; extra }
@@ -109,7 +109,7 @@ module Releases = struct
     v4_05_0; v4_06_0; v4_06_1; v4_07_0; v4_08_0 ]
 
   let all = [ v4_00; v4_01; v4_02; v4_03;
-    v4_04; v4_05; v4_06; v4_07; v4_08 ]
+              v4_04; v4_05; v4_06; v4_07; v4_08 ]
 
   let recent = [ v4_03; v4_04; v4_05; v4_06; v4_07 ]
 
@@ -166,46 +166,60 @@ module Has = struct
     |_ -> false
 end
 
+module Configure_options = struct
+  type o = [ `Afl | `Flambda | `Default_unsafe_string | `Force_safe_string | `Frame_pointer ]
+
+  let to_description t = 
+    match t with
+    | `Afl -> "AFL (fuzzing) support"
+    | `Flambda -> "flambda inlining"
+    | `Default_unsafe_string -> "default to unsafe strings"
+    | `Force_safe_string -> "force safe string mode"
+    | `Frame_pointer -> "frame pointer"
+
+  let to_string t =
+    match t with
+    | `Afl -> "afl"
+    | `Flambda -> "flambda"
+    | `Default_unsafe_string -> "default-unsafe-string"
+    | `Force_safe_string -> "force-safe-string"
+    | `Frame_pointer -> "fp"
+
+  let to_configure_flag t =
+    match t with
+    | `Afl -> "-afl-instrument"
+    | `Flambda -> "-flambda"
+    | `Default_unsafe_string -> "-default-unsafe-string"
+    | `Force_safe_string -> "-force-safe-string"
+    | `Frame_pointer -> "-with-frame-pointer"
+
+end
+
+let compiler_variants {major; minor; _} =
+    match major,minor with
+    | 4,8 -> [[]; [`Afl]; [`Flambda]; [`Flambda;`Frame_pointer]; [`Default_unsafe_string]; [`Force_safe_string]]
+    | 4,7 -> [[]; [`Afl]; [`Flambda]; [`Default_unsafe_string]; [`Force_safe_string]]
+    | 4,6 -> [[]; [`Afl]; [`Flambda]; [`Default_unsafe_string]; [`Force_safe_string]]
+    | 4,5 -> [[]; [`Afl]; [`Flambda]]
+    | 4,4 -> [[]; [`Flambda]]
+    | 4,3 -> [[]; [`Flambda]]
+    | _ -> [[]]
+
+module Sources = struct
+  let trunk = Releases.v4_08
+
+  let git_tag ({major; minor; patch; _ } as ov) =
+    match major, minor, patch with
+    | major, minor, _ when major = trunk.major && minor = trunk.minor -> "trunk"
+    | _ -> to_string (with_variant ov None)
+end
+
 module Opam = struct
 
-  let variants {major; minor; _} =
-    match major,minor with
-    | 4,8 -> ["trunk";"trunk+afl";"trunk+flambda"]
-    | 4,7 -> ["afl";"flambda";"default-unsafe-string";"force-safe-string"]
-    | 4,6 -> ["afl";"flambda";"default-unsafe-string";"force-safe-string"]
-    | 4,5 -> ["afl";"flambda"]
-    | 4,4 -> ["flambda"]
-    | 4,3 -> ["flambda"]
-    | _ -> []
-
-  let default_variant {major; minor; _} =
-    match major,minor with
-    | 4,8 -> Some "trunk"
-    | 4,7 -> None
-    | 4,6 -> None
-    | 4,5 -> None
-    | 4,4 -> None
-    | 4,3 -> None
-    | _ -> None
-
-  let default_switch t =
-    { t with extra = default_variant t }
-
-  let switches t =
-    match default_variant t with
-    | None -> { t with extra = None } :: (List.map (fun e -> { t with extra = Some e}) (variants t))
-    | Some _ -> List.map (fun e -> { t with extra = Some e }) (variants t)
-
-  let variant_switches t =
-    let default_variant = default_variant t in
-    switches t |>
-    List.filter (fun {extra; _} -> extra <> default_variant)
- 
   module V2 = struct
-    let package t =
+    let name t =
       match t.extra with
       | None -> "ocaml-base-compiler." ^ (to_string t)
       | Some _ -> "ocaml-variants." ^ (to_string t)
   end
-
 end

@@ -12,7 +12,7 @@
  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  *
- *)
+*)
 
 (** Manipulate, parse and generate OCaml version strings.
 
@@ -132,7 +132,7 @@ val without_patch : t -> t
     latest patch release (e.g. [4.06] instead of [4.06.1]). *)
 
 (** {2 Constants } *)
- 
+
 val sys_version : t
 (** [sys_version] is the version of OCaml that this library is
     currently compiled with, which will be the same as
@@ -209,40 +209,52 @@ module Releases : sig
 
   val all_patches : t list
   (** [all_patches] is an enumeration of all OCaml releases, including every patch release.
-    To get the major and minor releases with the latest patch version, use {!all} instead. *)
+      To get the major and minor releases with the latest patch version, use {!all} instead. *)
 
   val all : t list
   (** [all] is an enumeration of all the OCaml releases, with the latest patch versions in
-    each major and minor release. *)
+      each major and minor release. *)
 
   val dev : t list
   (** Enumeration of the latest development OCaml releases.
-    This is usually just one, but may include two active dev
-    versions if a release branch has just been cut. *)
+      This is usually just one, but may include two active dev
+      versions if a release branch has just been cut. *)
 
   val latest: t
   (** [latest] is the most recent stable release of OCaml. *)
 
   val recent : t list
   (** [recent] is the last five releases of OCaml, with each at the latest patch level.
-    This is the set that is most reliably tested in the opam package repository. *)
+      This is the set that is most reliably tested in the opam package repository. *)
 
   val recent_with_dev : t list
   (** [recent_with_dev] are the last four stable releases of OCaml and the latest
-    development branches. *)
+      development branches. *)
+end
+
+(** Values relating to the source code and version control of OCaml *)
+module Sources : sig
+
+  val trunk : t
+  (** [trunk] is the version of the development head of the OCaml git repository. *)
+
+  val git_tag : t -> string
+  (* [git_tag v] returns the Git tag or branch that corresponds to the release
+     [v] of OCaml.  If [v] does not have a patch releases, then it will be a branch
+     that points to the relevant release branch. *)
 end
 
 (** {2 Feature Selection} *)
 
 (** Determine which release a feature or architecture first appeared in. *)
 module Since : sig
- 
+
   val bytes: t
   (** [bytes] is the release that the {!Bytes} module first appeared in. *)
 
   val arch : arch -> t 
   (** [arch a] will return the first release of OCaml that the architecture
-    was reasonably stably supported on. *)
+      was reasonably stably supported on. *)
 end
 
 (** Test whether a release has a given feature. *)
@@ -250,45 +262,44 @@ module Has : sig
 
   val bytes : t -> bool
   (** [bytes t] will return {!true} if that release has a {!bytes} type.
-    Note that opam provides a [bytes] compatibility package for older releases. *)
+      Note that opam provides a [bytes] compatibility package for older releases. *)
 
   val arch : arch -> t -> bool
   (** [arch a t] will return {!true} if architecture [a] is supported on release [t]. *)
 end
 
+(** Configuration parameters that affect the behaviour of OCaml at compiler-build-time. *)
+module Configure_options : sig
+
+  type o =
+    [ `Afl
+    | `Default_unsafe_string
+    | `Flambda
+    | `Force_safe_string
+    | `Frame_pointer ]
+  (** Configuration options available at compiler build time. *)
+
+  val to_string : o -> string
+  (** [to_string o] returns a compact representation of {!o} suitable for use in opam version strings. *)
+
+  val to_description : o -> string
+  (** [to_description o] returns a human-readable representation of {!o}. *)
+
+  val to_configure_flag : o -> string
+  (** [to_configure_flag o] returns a string that can be passed to OCaml's [configure] script to activate that feature. *)
+end
+
+val compiler_variants : t -> Configure_options.o list list
+(** [compiler_variants v] returns a list of configuration options that are available and useful
+    for version [v] of the compiler. *)
+
 (** Opam compiler switches.
     These are available from the public {{:https://github.com/ocaml/opam-repository}opam-repository}. *)
 module Opam : sig
 
-  val variants : t -> string list
-  (** [variants t] lists the compiler variants that are available in
-    opam for [t] strings. This is returned as a string that can be passed to
-    {!with_variant} to form a full version (or use {!switches} as a convenience). *)
-
-  val default_variant : t -> string option
-  (** [default_variant t] returns [Some v] if a variant exists by
-    default for version [t].  This is typically true for development
-    versions of the compiler that have a branch name such as [trunk]
-    appended to their switch name.  {!default_switch} combines this into a
-    full OCaml version. *)
-
-  val default_switch : t -> t
-  (** [default_switch t] is the name of the switch of the stock version of [t].
-    This is normally just the version number, but can include an extra version
-    string such as [trunk] for development versions of the compiler. *)
-
-  val switches : t -> t list
-  (** [switches t] lists all the available opam switches for compiler version [t].
-    This list includes the default compiler, and any available variants such as
-    [flambda]. *)
-
-  val variant_switches : t -> t list
-  (** [variant_switches t] lists all the non-default switch versions available
-    for compiler version [t].  This filters out the default variant of the compiler. *)
-
   (** Opam 2.0 functions *)
   module V2 : sig
-    val package : t -> string
+    val name : t -> string
     (** [package t] returns the opam2 package for that compiler version. *)
   end
 end
