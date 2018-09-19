@@ -2,7 +2,7 @@
 .PHONY: build clean test
 
 build:
-	dune build @install --dev
+	dune build @install
 
 doc:
 	dune build @doc
