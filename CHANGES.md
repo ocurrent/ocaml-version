@@ -2,6 +2,7 @@
 
 * Add ARM32 (aarch32, arm32v7) architecture.
 * Add more OCaml 4.07.0 functions and mark it as latest stable.
+* Port to Dune from Jbuilder.
 
 ## v0.4.0
 

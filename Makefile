@@ -2,22 +2,22 @@
 .PHONY: build clean test
 
 build:
-	jbuilder build @install --dev
+	dune build @install --dev
 
 doc:
-	jbuilder build @doc
+	dune build @doc
 
 test:
-	jbuilder runtest
+	dune runtest
 
 install:
-	jbuilder install
+	dune install
 
 uninstall:
-	jbuilder uninstall
+	dune uninstall
 
 clean:
-	jbuilder clean
+	dune clean
 
 publish-doc: doc
 	rm -rf .gh-pages
