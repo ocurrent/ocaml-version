@@ -195,14 +195,15 @@ module Configure_options = struct
 
 end
 
-let compiler_variants {major; minor; _} =
-    match major,minor with
-    | 4,8 -> [[]; [`Afl]; [`Flambda]; [`Flambda;`Frame_pointer]; [`Default_unsafe_string]; [`Force_safe_string]]
-    | 4,7 -> [[]; [`Afl]; [`Flambda]; [`Default_unsafe_string]; [`Force_safe_string]]
-    | 4,6 -> [[]; [`Afl]; [`Flambda]; [`Default_unsafe_string]; [`Force_safe_string]]
-    | 4,5 -> [[]; [`Afl]; [`Flambda]]
-    | 4,4 -> [[]; [`Flambda]]
-    | 4,3 -> [[]; [`Flambda]]
+let compiler_variants arch {major; minor; _} =
+    match major,minor,arch with
+    | 4,8,`X86_64 -> [[]; [`Afl]; [`Flambda]; [`Flambda;`Frame_pointer]; [`Default_unsafe_string]; [`Force_safe_string]]
+    | 4,8,_ -> [[]; [`Afl]; [`Flambda];[`Default_unsafe_string]; [`Force_safe_string]]
+    | 4,7,_ -> [[]; [`Afl]; [`Flambda]; [`Default_unsafe_string]; [`Force_safe_string]]
+    | 4,6,_ -> [[]; [`Afl]; [`Flambda]; [`Default_unsafe_string]; [`Force_safe_string]]
+    | 4,5,_ -> [[]; [`Afl]; [`Flambda]]
+    | 4,4,_ -> [[]; [`Flambda]]
+    | 4,3,_ -> [[]; [`Flambda]]
     | _ -> [[]]
 
 module Sources = struct
@@ -221,5 +222,16 @@ module Opam = struct
       match t.extra with
       | None -> "ocaml-base-compiler." ^ (to_string t)
       | Some _ -> "ocaml-variants." ^ (to_string t)
+
+    let variant_switch t vs =
+      match vs with
+      | [] -> with_variant t None
+      | vs ->
+        let v = String.concat "+" (List.map Configure_options.to_string vs) in
+        with_variant t (Some v)
+
+    let switches arch t =
+      compiler_variants arch t |>
+      List.map (fun vs -> variant_switch t vs)
   end
 end

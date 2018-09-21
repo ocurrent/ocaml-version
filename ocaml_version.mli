@@ -289,7 +289,7 @@ module Configure_options : sig
   (** [to_configure_flag o] returns a string that can be passed to OCaml's [configure] script to activate that feature. *)
 end
 
-val compiler_variants : t -> Configure_options.o list list
+val compiler_variants : arch -> t -> Configure_options.o list list
 (** [compiler_variants v] returns a list of configuration options that are available and useful
     for version [v] of the compiler. *)
 
@@ -301,5 +301,16 @@ module Opam : sig
   module V2 : sig
     val name : t -> string
     (** [package t] returns the opam2 package for that compiler version. *)
+
+    val variant_switch : t -> Configure_options.o list -> t
+    (** [variant_switch t cs] returns an OCaml version [t] whose
+        variant version field reflects the configuration options in [cs] *)
+
+    val switches : arch -> t -> t list
+    (** [switches arch t] returns the list of opam switches that
+        are available for that compiler and architecture combination.
+        For example, an x86_64 one would yield a list that includes
+        flambda and the flambda-with-frame-pointer combinations. *)
+
   end
 end
