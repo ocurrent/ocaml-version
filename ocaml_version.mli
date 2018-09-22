@@ -119,6 +119,10 @@ val with_variant : t -> string option -> t
     the extra version information in [t] to
     [extra], and remove it if [None] is supplied. *)
 
+val without_variant : t -> t
+(** [without_variant t] is {!with_variant} [t None]. It removes
+    any extra version information from the version string [t]. *)
+
 val with_patch : t -> int option -> t
 (** [with_patch t patch] will return a fresh value with
     the patch number in [t] to [patch], and remove it if [None]

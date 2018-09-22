@@ -65,6 +65,7 @@ let compare {major; minor; patch; extra} a =
 let sys_version = of_string_exn Sys.ocaml_version
 
 let with_variant t extra = { t with extra }
+let without_variant t = { t with extra=None }
 let with_patch t patch = { t with patch }
 let without_patch t = { t with patch=None }
 
@@ -220,8 +221,9 @@ module Opam = struct
   module V2 = struct
     let name t =
       match t.extra with
-      | None -> "ocaml-base-compiler." ^ (to_string t)
       | Some _ -> "ocaml-variants." ^ (to_string t)
+      | None when List.mem t Releases.dev -> "ocaml-variants." ^ (to_string t)
+      | None -> "ocaml-base-compiler." ^ (to_string t)
 
     let variant_switch t vs =
       match vs with
