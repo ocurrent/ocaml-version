@@ -1,7 +1,7 @@
 ## dev
 
 * Add ARM32 (aarch32, arm32v7) architecture.
-* Add more OCaml 4.07.0 functions and mark it as latest stable.
+* Add more OCaml 4.07.[0,1] functions and mark it as latest stable.
 * Port to Dune from Jbuilder.
 * Add several modules related to compiler configuration, in order
   to faciliate mechanical generation of opam2 compiler packages.
