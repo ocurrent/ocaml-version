@@ -6,6 +6,7 @@
 * Add several modules related to compiler configuration, in order
   to faciliate mechanical generation of opam2 compiler packages.
 * Drop support for opam 1.2.x in favour of opam 2.0.0.
+* Update opam metadata to 2.0 format.
 
 ## v0.4.0
 
