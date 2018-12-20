@@ -1,3 +1,9 @@
+## dev
+
+* Reinstate OCaml 4.02 to the "recent" list after a request
+  from @dra27.  This means that all the supported OCaml compilers
+  for Dune will be present in a single container.
+
 ## v1.0.0
 
 * Add ARM32 (aarch32, arm32v7) architecture.
