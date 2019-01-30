@@ -3,6 +3,7 @@
 * Reinstate OCaml 4.02 to the "recent" list after a request
   from @dra27.  This means that all the supported OCaml compilers
   for Dune will be present in a single container.
+* Add support for 4.09 now that 4.08 has branched.
 
 ## v1.0.0
 
