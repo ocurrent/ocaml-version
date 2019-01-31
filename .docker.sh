@@ -15,8 +15,9 @@ export OPAMYES=1
 export OPAMJOBS=3
 opam install --deps-only .
 rm -f jbuild-workspace.dev
+echo "(lang dune 1.0)" > jbuild-workspace.dev
 for v in $VERSIONS; do
-  echo "(context ((switch $v)))" >> jbuild-workspace.dev
+  echo "(context (opam (switch $v)))" >> jbuild-workspace.dev
   opam install --deps-only -t --switch $v .
 done
 
