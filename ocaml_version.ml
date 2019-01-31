@@ -228,8 +228,9 @@ module Opam = struct
   module V2 = struct
     let name t =
       match t.extra with
+      | Some extra when List.mem t Releases.dev -> Printf.sprintf "ocaml-variants.%s+trunk+%s" (to_string (without_variant t)) extra
       | Some _ -> "ocaml-variants." ^ (to_string t)
-      | None when List.mem t Releases.dev -> "ocaml-variants." ^ (to_string t)
+      | None when List.mem t Releases.dev -> Printf.sprintf "ocaml-variants.%s+trunk" (to_string t)
       | None -> "ocaml-base-compiler." ^ (to_string t)
 
     let variant_switch t vs =
