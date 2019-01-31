@@ -68,6 +68,7 @@ let with_variant t extra = { t with extra }
 let without_variant t = { t with extra=None }
 let with_patch t patch = { t with patch }
 let without_patch t = { t with patch=None }
+let with_just_major_and_minor t = { t with patch=None; extra=None }
 
 module Releases = struct
   let v4_00_0 = of_string_exn "4.00.0"
@@ -123,7 +124,12 @@ module Releases = struct
 
   let dev = [ v4_08; v4_09 ]
 
-  let recent_with_dev = List.concat [recent;dev]
+  let is_dev t =
+    let t = with_just_major_and_minor t in
+    let dev = List.map with_just_major_and_minor dev in
+    List.mem t dev
+
+  let recent_with_dev = List.concat [recent; dev]
 
 end
 
@@ -228,9 +234,9 @@ module Opam = struct
   module V2 = struct
     let name t =
       match t.extra with
-      | Some extra when List.mem t Releases.dev -> Printf.sprintf "ocaml-variants.%s+trunk+%s" (to_string (without_variant t)) extra
+      | Some extra when Releases.is_dev t -> Printf.sprintf "ocaml-variants.%s+trunk+%s" (to_string (without_variant t)) extra
       | Some _ -> "ocaml-variants." ^ (to_string t)
-      | None when List.mem t Releases.dev -> Printf.sprintf "ocaml-variants.%s+trunk" (to_string t)
+      | None when Releases.is_dev t -> Printf.sprintf "ocaml-variants.%s+trunk" (to_string t)
       | None -> "ocaml-base-compiler." ^ (to_string t)
 
     let variant_switch t vs =

@@ -135,6 +135,12 @@ val without_patch : t -> t
     all named without a patch number and compiled using the
     latest patch release (e.g. [4.06] instead of [4.06.1]). *)
 
+val with_just_major_and_minor : t -> t
+(** [with_just_major_and_minor t] strips out any patch and
+    extra version information to return the X.Y form of the
+    OCaml release. For example, [4.08.0+trunk+flambda] will
+    return the version representing [4.08]. *)
+
 (** {2 Constants } *)
 
 val sys_version : t
@@ -249,6 +255,10 @@ module Releases : sig
   val recent_with_dev : t list
   (** [recent_with_dev] are the last four stable releases of OCaml and the latest
       development branches. *)
+
+  val is_dev : t -> bool
+  (** [is_dev t] will return true if the release [t] represents a development
+      release instead of a stable archive. *)
 end
 
 (** Values relating to the source code and version control of OCaml *)

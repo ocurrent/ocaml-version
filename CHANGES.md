@@ -5,6 +5,7 @@
   for Dune will be present in a single container.
 * Add support for 4.09 now that 4.08 has branched.
 * Use `+trunk` in the suffix for opam dev version packages.
+* Add `Releases.is_dev` to make it easier to spot a dev release.
 
 ## v1.0.0
 
