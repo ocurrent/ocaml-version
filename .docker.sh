@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
-DISTRO=${DISTRO:-alpine-3.6}
-VERSIONS=${OCAML_VERSIONS:-4.04.2 4.05.0 4.06.0}
+DISTRO=${DISTRO:-alpine}
+VERSIONS=${OCAML_VERSIONS:-4.04 4.05 4.06 4.07}
 
 set -ex
-# TODO opam2 depext
 case $DISTRO in
 alpine-*) sudo apk add m4 ;;
 debian-*) sudo apt -y install m4 pkg-config ;;
@@ -21,5 +20,5 @@ for v in $VERSIONS; do
   opam install --deps-only -t --switch $v .
 done
 
-jbuilder build --workspace jbuild-workspace.dev
+dune build --workspace jbuild-workspace.dev
 rm -f jbuild-workspace.dev
