@@ -7,6 +7,6 @@ env:
   global:
   - OCAML_VERSIONS="4.03 4.04 4.05 4.06 4.07"
   matrix:
-  - DISTRO="debian"
+  - DISTRO="debian-stable"
   - DISTRO="alpine"
   - DISTRO="ubuntu"
