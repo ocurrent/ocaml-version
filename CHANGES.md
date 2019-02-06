@@ -1,4 +1,4 @@
-## dev
+## v2.0.0 (2019-02-06)
 
 * Reinstate OCaml 4.02 to the "recent" list after a request
   from @dra27.  This means that all the supported OCaml compilers
