@@ -1,3 +1,7 @@
+## dev
+
+* Add support for 4.10 as the new trunk.
+
 ## v2.0.0 (2019-02-06)
 
 * Reinstate OCaml 4.02 to the "recent" list after a request

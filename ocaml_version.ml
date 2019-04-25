@@ -109,20 +109,24 @@ module Releases = struct
   let v4_09_0 = of_string_exn "4.09.0"
   let v4_09 = v4_09_0
 
+  let v4_10_0 = of_string_exn "4.10.0"
+  let v4_10 = v4_10_0
+
+
   let all_patches = [
     v4_00_1; v4_01_0; v4_02_0; v4_02_1; v4_02_2;
     v4_02_3; v4_03_0; v4_04_0; v4_04_1; v4_04_2;
     v4_05_0; v4_06_0; v4_06_1; v4_07_0; v4_07_1;
-    v4_08_0; v4_09_0 ]
+    v4_08_0; v4_09_0; v4_10_0 ]
 
   let all = [ v4_00; v4_01; v4_02; v4_03; v4_04;
-              v4_05; v4_06; v4_07; v4_08; v4_09 ]
+              v4_05; v4_06; v4_07; v4_08; v4_09; v4_10 ]
 
   let recent = [ v4_02; v4_03; v4_04; v4_05; v4_06; v4_07 ]
 
   let latest = v4_07
 
-  let dev = [ v4_08; v4_09 ]
+  let dev = [ v4_08; v4_09; v4_10 ]
 
   let is_dev t =
     let t = with_just_major_and_minor t in
@@ -209,6 +213,8 @@ end
 
 let compiler_variants arch {major; minor; _} =
     match major,minor,arch with
+    | 4,10,`X86_64 -> [[]]
+    | 4,10,_ -> [[]]
     | 4,9,`X86_64 -> [[]]
     | 4,9,_ -> [[]]
     | 4,8,`X86_64 -> [[]; [`Afl]; [`Flambda]; [`Frame_pointer]; [`Frame_pointer;`Flambda]; [`Default_unsafe_string]]
@@ -221,7 +227,7 @@ let compiler_variants arch {major; minor; _} =
     | _ -> [[]]
 
 module Sources = struct
-  let trunk = Releases.v4_08
+  let trunk = Releases.v4_10
 
   let git_tag ({major; minor; patch; _ } as ov) =
     match major, minor, patch with
