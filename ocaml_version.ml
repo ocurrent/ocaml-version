@@ -122,11 +122,11 @@ module Releases = struct
   let all = [ v4_00; v4_01; v4_02; v4_03; v4_04;
               v4_05; v4_06; v4_07; v4_08; v4_09; v4_10 ]
 
-  let recent = [ v4_02; v4_03; v4_04; v4_05; v4_06; v4_07 ]
+  let recent = [ v4_02; v4_03; v4_04; v4_05; v4_06; v4_07; v4_08 ]
 
-  let latest = v4_07
+  let latest = v4_08
 
-  let dev = [ v4_08; v4_09; v4_10 ]
+  let dev = [ v4_09; v4_10 ]
 
   let is_dev t =
     let t = with_just_major_and_minor t in
@@ -213,9 +213,9 @@ end
 
 let compiler_variants arch {major; minor; _} =
     match major,minor,arch with
-    | 4,10,`X86_64 -> [[]]
+    | 4,10,`X86_64 -> [[]; [`Afl]; [`Flambda]]
     | 4,10,_ -> [[]]
-    | 4,9,`X86_64 -> [[]]
+    | 4,9,`X86_64 -> [[]; [`Afl]; [`Flambda]]
     | 4,9,_ -> [[]]
     | 4,8,`X86_64 -> [[]; [`Afl]; [`Flambda]; [`Frame_pointer]; [`Frame_pointer;`Flambda]; [`Default_unsafe_string]]
     | 4,8,_ -> [[]; [`Afl]; [`Flambda];[`Default_unsafe_string]]

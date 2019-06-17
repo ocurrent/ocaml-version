@@ -1,5 +1,6 @@
 ## dev
 
+* Add OCaml 4.08.0 release
 * Add support for 4.10 as the new trunk.
 
 ## v2.0.0 (2019-02-06)
