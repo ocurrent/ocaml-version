@@ -104,7 +104,8 @@ module Releases = struct
   let v4_07 = v4_07_1
 
   let v4_08_0 = of_string_exn "4.08.0"
-  let v4_08 = v4_08_0
+  let v4_08_1 = of_string_exn "4.08.1"
+  let v4_08 = v4_08_1
 
   let v4_09_0 = of_string_exn "4.09.0"
   let v4_09 = v4_09_0
@@ -117,7 +118,7 @@ module Releases = struct
     v4_00_1; v4_01_0; v4_02_0; v4_02_1; v4_02_2;
     v4_02_3; v4_03_0; v4_04_0; v4_04_1; v4_04_2;
     v4_05_0; v4_06_0; v4_06_1; v4_07_0; v4_07_1;
-    v4_08_0; v4_09_0; v4_10_0 ]
+    v4_08_0; v4_08_1; v4_09_0; v4_10_0 ]
 
   let all = [ v4_00; v4_01; v4_02; v4_03; v4_04;
               v4_05; v4_06; v4_07; v4_08; v4_09; v4_10 ]
@@ -127,6 +128,9 @@ module Releases = struct
   let latest = v4_08
 
   let dev = [ v4_09; v4_10 ]
+  (* Special case until 4.08.1 is released so we can rebuild
+  * containers and unblock opam builds *)
+  let dev = v4_08 :: dev
 
   let is_dev t =
     let t = with_just_major_and_minor t in
