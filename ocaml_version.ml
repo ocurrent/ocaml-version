@@ -128,9 +128,6 @@ module Releases = struct
   let latest = v4_08
 
   let dev = [ v4_09; v4_10 ]
-  (* Special case until 4.08.1 is released so we can rebuild
-  * containers and unblock opam builds *)
-  let dev = v4_08 :: dev
 
   let is_dev t =
     let t = with_just_major_and_minor t in
