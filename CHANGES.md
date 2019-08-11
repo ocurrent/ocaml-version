@@ -1,4 +1,4 @@
-## dev
+## v2.2.0 (2019-08-11)
 
 * Add OCaml 4.08.1 release
 
