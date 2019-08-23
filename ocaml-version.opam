@@ -9,6 +9,7 @@ bug-reports: "https://github.com/avsm/ocaml-version/issues"
 depends: [
   "ocaml" {>= "4.02.0"}
   "dune"
+  "result"
 ]
 build: [
   ["dune" "subst"] {pinned}
