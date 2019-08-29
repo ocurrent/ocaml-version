@@ -1,4 +1,4 @@
-## v2.3.0 (2019-08-29)
+## v2.3.0 (2019-08-29)
 
 * Support OCaml 4.02.3, which brings back a dependency on
   the `result` library.
