@@ -1,6 +1,8 @@
-## dev
+## v2.2.0 (2019-08-29)
 
 * Add OCaml 4.08.1 release
+* Support OCaml 4.02.3, which brings back a dependency on 
+  the `result` compatibility library.
 
 ## v2.1.0 (2019-06-26)
 
