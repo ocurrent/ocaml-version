@@ -247,6 +247,10 @@ module Releases : sig
   (** [all] is an enumeration of all the OCaml releases, with the latest patch versions in
       each major and minor release. *)
 
+  val unreleased_betas : t list
+  (** Enumerates the latest beta / release-candidate versions for each {i
+      unreleased} minor OCaml series. *)
+
   val dev : t list
   (** Enumeration of the latest development OCaml releases.
       This is usually just one, but may include two active dev

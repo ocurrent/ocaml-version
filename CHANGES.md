@@ -1,3 +1,8 @@
+## Unreleased
+
+* Add `unreleased_betas` list to enumerate the latest release-candidate
+  version for each unreleased minor OCaml series.
+
 ## v2.3.0 (2019-08-29)
 
 * Support OCaml 4.02.3, which brings back a dependency on
