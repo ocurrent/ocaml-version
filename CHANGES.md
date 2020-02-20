@@ -2,6 +2,7 @@
 
 * Add `unreleased_betas` list to enumerate the latest release-candidate
   version for each unreleased minor OCaml series.
+* Do not `open Result` to clean up internal code.
 
 ## v2.3.0 (2019-08-29)
 
