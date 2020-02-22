@@ -56,6 +56,12 @@ let ( ++ ) x fn =
   | 0 -> fn ()
   | r -> r
 
+let equal {major; minor; patch; extra} a =
+  (major : int) = a.major &&
+  (minor : int) = a.minor &&
+  (patch : int option) = a.patch &&
+  (extra : string option) = a.extra
+
 let compare {major; minor; patch; extra} a =
   compare major a.major ++ fun () ->
     compare minor a.minor ++ fun () ->

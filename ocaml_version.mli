@@ -49,6 +49,11 @@ val of_string_exn : string -> t
 (** [of_string_exn t] behaves as {!of_string} but raises
     [Invalid_argument] if the string cannot be parsed. *)
 
+val equal : t -> t -> bool
+(** [equal a b] is the equality function for two OCaml
+    version strings. Returns [true] if they are equal,
+    [false] if they are not. *)
+
 val compare : t -> t -> int
 (** [compare a b] is the comparison function for two OCaml
     version strings. Returns [-1] if [a<b], [0] if they are
