@@ -234,6 +234,9 @@ module Releases : sig
   val v4_09_0 : t
   (** Version 4.09.0 *)
 
+  val v4_09_1 : t
+  (** Version 4.09.1 *)
+
   val v4_09 : t
   (** Latest release in the 4.09.x series *)
 
