@@ -61,7 +61,7 @@ val compare : t -> t -> int
     comparison for the major, minor and patch versions, and
     lexical comparison for any extra version strings present. *)
 
-val pp : Format.formatter -> t -> unit
+val pp : Format.formatter -> t -> unit [@@ocaml.toplevel_printer]
 (** [pp fmt t] will output a human-readable version string of
     [t] to the [fmt] formatter. *)
 
