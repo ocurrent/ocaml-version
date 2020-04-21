@@ -1,4 +1,4 @@
-## v2.4.1 (2020-03-20)
+## v2.5.0 (2020-03-22)
 
 * Add OCaml 4.09.1 and 4.10.0 releases (@avsm @kit-ty-kate).
 * Add `equal` function to test versions for equality (#7 @kit-ty-kate)
