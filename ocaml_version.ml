@@ -230,6 +230,8 @@ end
 
 let compiler_variants arch {major; minor; _} =
     match major,minor,arch with
+    | 4,12,`X86_64 -> [[]; [`Afl]; [`Flambda]]
+    | 4,11,`X86_64 -> [[]; [`Afl]; [`Flambda]]
     | 4,10,`X86_64 -> [[]; [`Afl]; [`Flambda]]
     | 4,9,`X86_64 -> [[]; [`Afl]; [`Flambda]; [`Frame_pointer]; [`Frame_pointer;`Flambda]; [`Default_unsafe_string]]
     | 4,8,`X86_64 -> [[]; [`Afl]; [`Flambda]; [`Frame_pointer]; [`Frame_pointer;`Flambda]; [`Default_unsafe_string]; [`Force_safe_string]]
