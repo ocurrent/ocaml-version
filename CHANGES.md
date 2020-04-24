@@ -1,3 +1,7 @@
+## dev
+
+* Mark trunk as 4.12.0 and add the 4.11 as a development beta (@avsm).
+
 ## v2.5.0 (2020-03-22)
 
 * Add OCaml 4.09.1 and 4.10.0 releases (@avsm @kit-ty-kate).
