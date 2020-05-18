@@ -200,7 +200,7 @@ module Has = struct
 end
 
 module Configure_options = struct
-  type o = [ `Afl | `Flambda | `Default_unsafe_string | `Force_safe_string | `Frame_pointer ]
+  type o = [ `Afl | `Flambda | `Default_unsafe_string | `Force_safe_string | `Frame_pointer | `_32bit ]
 
   let to_description t =
     match t with
@@ -209,6 +209,7 @@ module Configure_options = struct
     | `Default_unsafe_string -> "default to unsafe strings"
     | `Force_safe_string -> "force safe string mode"
     | `Frame_pointer -> "frame pointer"
+    | `_32bit -> "32bit"
 
   let to_string t =
     match t with
@@ -217,6 +218,7 @@ module Configure_options = struct
     | `Default_unsafe_string -> "default-unsafe-string"
     | `Force_safe_string -> "force-safe-string"
     | `Frame_pointer -> "fp"
+    | `_32bit -> "32bit"
 
   let to_configure_flag t =
     match t with
@@ -225,6 +227,8 @@ module Configure_options = struct
     | `Default_unsafe_string -> "-default-unsafe-string"
     | `Force_safe_string -> "-force-safe-string"
     | `Frame_pointer -> "-with-frame-pointer"
+      (* XXX(dinosaure): only for linux. *)
+    | `_32bit -> "CC=gcc -m32 AS=as --32 ASPP=gcc -m32 -c --host i386-linux PARTIALLD=ld -r -melf_i386"
 
 end
 
@@ -232,10 +236,10 @@ let compiler_variants arch {major; minor; _} =
     match major,minor,arch with
     | 4,12,`X86_64 -> [[]; [`Afl]; [`Flambda]]
     | 4,11,`X86_64 -> [[]; [`Afl]; [`Flambda]]
-    | 4,10,`X86_64 -> [[]; [`Afl]; [`Flambda]]
+    | 4,10,`X86_64 -> [[]; [`Afl]; [`Flambda]; [`_32bit]]
     | 4,9,`X86_64 -> [[]; [`Afl]; [`Flambda]; [`Frame_pointer]; [`Frame_pointer;`Flambda]; [`Default_unsafe_string]]
     | 4,8,`X86_64 -> [[]; [`Afl]; [`Flambda]; [`Frame_pointer]; [`Frame_pointer;`Flambda]; [`Default_unsafe_string]; [`Force_safe_string]]
-    | 4,10,_ -> [[]; [`Afl]; [`Flambda]]
+    | 4,10,_ -> [[]; [`Afl]; [`Flambda]; [`_32bit]]
     | 4,9,_ -> [[]; [`Afl]; [`Flambda]; [`Default_unsafe_string]]
     | 4,8,_ -> [[]; [`Afl]; [`Flambda]; [`Default_unsafe_string]; [`Force_safe_string]]
     | 4,7,_ -> [[]; [`Afl]; [`Flambda]; [`Default_unsafe_string]; [`Force_safe_string]]

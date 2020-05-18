@@ -329,7 +329,8 @@ module Configure_options : sig
     | `Default_unsafe_string
     | `Flambda
     | `Force_safe_string
-    | `Frame_pointer ]
+    | `Frame_pointer
+    | `_32bit ]
   (** Configuration options available at compiler build time. *)
 
   val to_string : o -> string
