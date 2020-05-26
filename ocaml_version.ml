@@ -154,14 +154,15 @@ module Releases = struct
 
 end
 
-type arch = [`X86_64 | `Aarch64 | `Ppc64le | `Aarch32 ]
-let arches = [ `X86_64; `Aarch64; `Ppc64le; `Aarch32 ]
+type arch = [`I386 | `X86_64 | `Aarch64 | `Ppc64le | `Aarch32 ]
+let arches = [ `I386; `X86_64; `Aarch64; `Ppc64le; `Aarch32 ]
 
 let string_of_arch = function
   | `Aarch64 -> "arm64"
   | `Aarch32 -> "arm32v7"
   | `X86_64 -> "amd64"
   | `Ppc64le -> "ppc64le"
+  | `I386 -> "i386"
 
 let arch_of_string = function
   | "arm64" | "aarch64" -> Result.Ok `Aarch64
@@ -180,6 +181,7 @@ module Since = struct
 
   let arch (a:arch) =
     match a with
+    | `I386 -> Releases.v4_06_0 (* TODO can be ealier *)
     | `Aarch32 -> Releases.v4_06_0
     | `Aarch64 -> Releases.v4_05_0
     | `Ppc64le -> Releases.v4_06_0
