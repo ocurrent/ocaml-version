@@ -1,6 +1,7 @@
 ## dev
 
 * Mark trunk as 4.12.0 and add the 4.11 as a development beta (@avsm).
+* Add i386 architecture (@dinosaure)
 
 ## v2.5.0 (2020-03-22)
 
