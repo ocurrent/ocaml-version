@@ -40,7 +40,7 @@ val to_string : ?sep:char -> t -> string
     Docker container tags from OCaml version strings, where
     only dashes and alphanumeric characters are allowed. *)
 
-val of_string : string -> (t, [> `Msg of string ]) result
+val of_string : string -> (t, [> `Msg of string ]) Result.result
 (** [of_string t] will parse the version string in [t].
     The return value is compatible with the {!Result}
     combinators defined in the [rresult] library. *)
@@ -49,6 +49,11 @@ val of_string_exn : string -> t
 (** [of_string_exn t] behaves as {!of_string} but raises
     [Invalid_argument] if the string cannot be parsed. *)
 
+val equal : t -> t -> bool
+(** [equal a b] is the equality function for two OCaml
+    version strings. Returns [true] if they are equal,
+    [false] if they are not. *)
+
 val compare : t -> t -> int
 (** [compare a b] is the comparison function for two OCaml
     version strings. Returns [-1] if [a<b], [0] if they are
@@ -56,7 +61,7 @@ val compare : t -> t -> int
     comparison for the major, minor and patch versions, and
     lexical comparison for any extra version strings present. *)
 
-val pp : Format.formatter -> t -> unit
+val pp : Format.formatter -> t -> unit [@@ocaml.toplevel_printer]
 (** [pp fmt t] will output a human-readable version string of
     [t] to the [fmt] formatter. *)
 
@@ -79,7 +84,7 @@ val string_of_arch : arch -> string
     {{:https://golang.org/doc/install/source#environment}GOARCH}
     convention used by Golang. *)
 
-val arch_of_string : string -> (arch, [> `Msg of string ]) result
+val arch_of_string : string -> (arch, [> `Msg of string ]) Result.result
 (** [arch_of_string t] will parse the architecture string in [t].
     The return value is compatible with the {!Result}
     combinators defined in the [rresult] library. This function
@@ -229,6 +234,9 @@ module Releases : sig
   val v4_09_0 : t
   (** Version 4.09.0 *)
 
+  val v4_09_1 : t
+  (** Version 4.09.1 *)
+
   val v4_09 : t
   (** Latest release in the 4.09.x series *)
 
@@ -238,6 +246,11 @@ module Releases : sig
   val v4_10 : t
   (** Latest release in the 4.10.x series *)
 
+  val v4_11_0 : t
+  (** Version 4.11.0 *)
+
+  val v4_11 : t
+  (** Latest release in the 4.11.x series *)
 
   val all_patches : t list
   (** [all_patches] is an enumeration of all OCaml releases, including every patch release.
@@ -246,6 +259,10 @@ module Releases : sig
   val all : t list
   (** [all] is an enumeration of all the OCaml releases, with the latest patch versions in
       each major and minor release. *)
+
+  val unreleased_betas : t list
+  (** Enumerates the latest beta / release-candidate versions for each {i
+      unreleased} minor OCaml series. *)
 
   val dev : t list
   (** Enumeration of the latest development OCaml releases.
@@ -256,11 +273,11 @@ module Releases : sig
   (** [latest] is the most recent stable release of OCaml. *)
 
   val recent : t list
-  (** [recent] is the last five releases of OCaml, with each at the latest patch level.
+  (** [recent] is the last eight releases of OCaml, with each at the latest patch level.
       This is the set that is most reliably tested in the opam package repository. *)
 
   val recent_with_dev : t list
-  (** [recent_with_dev] are the last four stable releases of OCaml and the latest
+  (** [recent_with_dev] are the last eight stable releases of OCaml and the latest
       development branches. *)
 
   val is_dev : t -> bool

@@ -42,7 +42,7 @@ let parse s =
     end
 
 let of_string s =
-  try Ok (parse s) with
+  try Result.Ok (parse s) with
   | _ -> Error (`Msg (Printf.sprintf "Unable to parse OCaml version '%s'" s))
 
 let of_string_exn s =
@@ -55,6 +55,12 @@ let ( ++ ) x fn =
   match x with
   | 0 -> fn ()
   | r -> r
+
+let equal {major; minor; patch; extra} a =
+  (major : int) = a.major &&
+  (minor : int) = a.minor &&
+  (patch : int option) = a.patch &&
+  (extra : string option) = a.extra
 
 let compare {major; minor; patch; extra} a =
   compare major a.major ++ fun () ->
@@ -108,26 +114,36 @@ module Releases = struct
   let v4_08 = v4_08_1
 
   let v4_09_0 = of_string_exn "4.09.0"
-  let v4_09 = v4_09_0
+  let v4_09_1 = of_string_exn "4.09.1"
+  let v4_09 = v4_09_1
 
   let v4_10_0 = of_string_exn "4.10.0"
   let v4_10 = v4_10_0
 
+  let v4_11_0 = of_string_exn "4.11.0"
+  let v4_11 = v4_11_0
+
+  let v4_12_0 = of_string_exn "4.12.0"
+  let v4_12 = v4_12_0
 
   let all_patches = [
     v4_00_1; v4_01_0; v4_02_0; v4_02_1; v4_02_2;
     v4_02_3; v4_03_0; v4_04_0; v4_04_1; v4_04_2;
     v4_05_0; v4_06_0; v4_06_1; v4_07_0; v4_07_1;
-    v4_08_0; v4_08_1; v4_09_0; v4_10_0 ]
+    v4_08_0; v4_08_1; v4_09_0; v4_09_1; v4_10_0;
+    v4_11_0; v4_12_0 ]
 
   let all = [ v4_00; v4_01; v4_02; v4_03; v4_04;
-              v4_05; v4_06; v4_07; v4_08; v4_09; v4_10 ]
+              v4_05; v4_06; v4_07; v4_08; v4_09;
+              v4_10; v4_11; v4_12 ]
 
-  let recent = [ v4_02; v4_03; v4_04; v4_05; v4_06; v4_07; v4_08 ]
+  let unreleased_betas = [ v4_11 ]
 
-  let latest = v4_08
+  let recent = [ v4_02; v4_03; v4_04; v4_05; v4_06; v4_07; v4_08; v4_09; v4_10 ]
 
-  let dev = [ v4_09; v4_10 ]
+  let latest = v4_10
+
+  let dev = [ v4_11; v4_12 ]
 
   let is_dev t =
     let t = with_just_major_and_minor t in
@@ -148,16 +164,16 @@ let string_of_arch = function
   | `Ppc64le -> "ppc64le"
 
 let arch_of_string = function
-  | "arm64" | "aarch64" -> Ok `Aarch64
-  | "amd64" | "x86_64" -> Ok `X86_64
-  | "arm32" | "arm32v7" | "aarch32" -> Ok `Aarch32
-  | "ppc64le" -> Ok `Ppc64le
-  | arch -> Error (`Msg ("Unknown architecture " ^ arch))
+  | "arm64" | "aarch64" -> Result.Ok `Aarch64
+  | "amd64" | "x86_64" -> Result.Ok `X86_64
+  | "arm32" | "arm32v7" | "aarch32" -> Result.Ok `Aarch32
+  | "ppc64le" -> Result.Ok `Ppc64le
+  | arch -> Result.Error (`Msg ("Unknown architecture " ^ arch))
 
 let arch_of_string_exn a =
   match arch_of_string a with
-  | Ok a -> a
-  | Error (`Msg m) -> raise (Invalid_argument m)
+  | Result.Ok a -> a
+  | Result.Error (`Msg m) -> raise (Invalid_argument m)
 
 module Since = struct
   let bytes = Releases.v4_03_0
@@ -186,7 +202,7 @@ end
 module Configure_options = struct
   type o = [ `Afl | `Flambda | `Default_unsafe_string | `Force_safe_string | `Frame_pointer ]
 
-  let to_description t = 
+  let to_description t =
     match t with
     | `Afl -> "AFL (fuzzing) support"
     | `Flambda -> "flambda inlining"
@@ -214,6 +230,8 @@ end
 
 let compiler_variants arch {major; minor; _} =
     match major,minor,arch with
+    | 4,12,`X86_64 -> [[]; [`Afl]; [`Flambda]]
+    | 4,11,`X86_64 -> [[]; [`Afl]; [`Flambda]]
     | 4,10,`X86_64 -> [[]; [`Afl]; [`Flambda]]
     | 4,9,`X86_64 -> [[]; [`Afl]; [`Flambda]; [`Frame_pointer]; [`Frame_pointer;`Flambda]; [`Default_unsafe_string]]
     | 4,8,`X86_64 -> [[]; [`Afl]; [`Flambda]; [`Frame_pointer]; [`Frame_pointer;`Flambda]; [`Default_unsafe_string]; [`Force_safe_string]]
@@ -228,7 +246,7 @@ let compiler_variants arch {major; minor; _} =
     | _ -> [[]]
 
 module Sources = struct
-  let trunk = Releases.v4_10
+  let trunk = Releases.v4_12
 
   let git_tag ({major; minor; patch; _ } as ov) =
     match major, minor, patch with
