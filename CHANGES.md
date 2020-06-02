@@ -1,4 +1,4 @@
-## v2.2.0 (2019-08-11)
+## dev
 
 * Mark trunk as 4.12.0 and add the 4.11 as a development beta (@avsm).
 
