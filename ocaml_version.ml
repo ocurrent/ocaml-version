@@ -154,8 +154,10 @@ module Releases = struct
 
 end
 
-type arch = [`I386 | `X86_64 | `Aarch64 | `Ppc64le | `Aarch32 ]
+type arch = [ `I386 | `X86_64 | `Aarch64 | `Ppc64le | `Aarch32 ]
 let arches = [ `I386; `X86_64; `Aarch64; `Ppc64le; `Aarch32 ]
+
+let arch_is_32bit = function `I386 | `Aarch32 -> true |_ -> false
 
 let string_of_arch = function
   | `Aarch64 -> "arm64"

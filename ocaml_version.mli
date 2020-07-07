@@ -96,6 +96,10 @@ val arch_of_string_exn: string -> arch
 (** [arch_of_string_exn t] is the same as {!arch_of_string},
     except that it raises [Invalid_argument] in case of error. *)
 
+val arch_is_32bit: arch -> bool
+(** [arch_is_32bit t] will return [true] if the architecture has
+     a 32-bit wordsize. *)
+
 (** {2 Accessors} *)
 
 val major : t -> int
