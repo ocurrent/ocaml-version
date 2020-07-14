@@ -1,7 +1,7 @@
-## dev
+## v2.6.0 (2020-07-14)
 
 * Mark trunk as 4.12.0 and add the 4.11 as a development beta (@avsm).
-* Add i386 architecture (@dinosaure)
+* Add i386 architecture (@dinosaure @avsm)
 * Add a `arch_is_32bit` to determine if wordsize is 32-bits. (@avsm)
 
 ## v2.5.0 (2020-03-22)
