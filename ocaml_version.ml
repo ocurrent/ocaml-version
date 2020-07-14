@@ -169,6 +169,7 @@ let string_of_arch = function
 let arch_of_string = function
   | "arm64" | "aarch64" -> Result.Ok `Aarch64
   | "amd64" | "x86_64" -> Result.Ok `X86_64
+  | "i386"  | "i686" | "686" | "386" -> Result.Ok `I386
   | "arm32" | "arm32v7" | "aarch32" -> Result.Ok `Aarch32
   | "ppc64le" -> Result.Ok `Ppc64le
   | arch -> Result.Error (`Msg ("Unknown architecture " ^ arch))

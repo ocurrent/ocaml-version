@@ -1,3 +1,5 @@
+* Fix `arch_of_string` to work with i386 strings (@avsm).
+
 ## v2.6.0 (2020-07-14)
 
 * Mark trunk as 4.12.0 and add the 4.11 as a development beta (@avsm).
