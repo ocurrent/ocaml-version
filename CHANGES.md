@@ -1,3 +1,12 @@
+## v3.0.0 (2020-07-29)
+
+* Change signature of `Configure_options.to_configure_flag` to
+  take an OCaml version, and add support for post-autoconf
+  flags in OCaml 4.08+.
+* Add some extra configure options for modern OCaml.
+* Add a `trunk_variants` that has additional tests that a
+  full OCaml test run can use (like disable-flat-float-array).
+
 ## v2.6.1 (2020-07-15)
 
 * Fix `arch_of_string` to work with i386 strings (@avsm).

@@ -205,15 +205,17 @@ module Has = struct
 end
 
 module Configure_options = struct
-  type o = [ `Afl | `Flambda | `Default_unsafe_string | `Force_safe_string | `Frame_pointer ]
+  type o = [ `Afl | `Flambda | `Default_unsafe_string | `Force_safe_string | `Frame_pointer | `No_naked_pointers | `Disable_flat_float_array ]
 
-  let to_description t =
+  let to_description (t:o) =
     match t with
     | `Afl -> "AFL (fuzzing) support"
     | `Flambda -> "flambda inlining"
     | `Default_unsafe_string -> "default to unsafe strings"
     | `Force_safe_string -> "force safe string mode"
     | `Frame_pointer -> "frame pointer"
+    | `No_naked_pointers -> "forbid unboxed pointers"
+    | `Disable_flat_float_array -> "disable float array unboxing"
 
   let to_string t =
     match t with
@@ -222,20 +224,32 @@ module Configure_options = struct
     | `Default_unsafe_string -> "default-unsafe-string"
     | `Force_safe_string -> "force-safe-string"
     | `Frame_pointer -> "fp"
+    | `No_naked_pointers -> "nnp"
+    | `Disable_flat_float_array -> "no-flat-float-array"
 
-  let to_configure_flag t =
-    match t with
-    | `Afl -> "-afl-instrument"
-    | `Flambda -> "-flambda"
-    | `Default_unsafe_string -> "-default-unsafe-string"
-    | `Force_safe_string -> "-force-safe-string"
-    | `Frame_pointer -> "-with-frame-pointer"
-
+  let to_configure_flag {major; minor; _} o =
+    if major < 5 && minor < 8 then (* pre autoconf *)
+      match o with
+      | `Afl -> "-afl-instrument"
+      | `Flambda -> "-flambda"
+      | `Default_unsafe_string -> "-default-unsafe-string"
+      | `Force_safe_string -> "-force-safe-string"
+      | `Frame_pointer -> "-with-frame-pointer"
+      | _ -> ""
+    else (* post autoconf *)
+      match o with
+      | `Afl -> "--with-afl"
+      | `Flambda -> "--enable-flambda"
+      | `Default_unsafe_string -> "--enable-default-unsafe-string"
+      | `Force_safe_string -> "--force-safe-string"
+      | `Frame_pointer -> "--enable-frame-pointers"
+      | `No_naked_pointers -> "--disable-naked-pointers"
+      | `Disable_flat_float_array -> "--disable-flat-float-array"
 end
 
 let compiler_variants arch {major; minor; _} =
     match major,minor,arch with
-    | 4,12,`X86_64 -> [[]; [`Afl]; [`Flambda]]
+    | 4,12,`X86_64 -> [[]; [`Afl]; [`Flambda]; [`No_naked_pointers]]
     | 4,11,`X86_64 -> [[]; [`Afl]; [`Flambda]]
     | 4,10,`X86_64 -> [[]; [`Afl]; [`Flambda]]
     | 4,9,`X86_64 -> [[]; [`Afl]; [`Flambda]; [`Frame_pointer]; [`Frame_pointer;`Flambda]; [`Default_unsafe_string]]
@@ -249,6 +263,15 @@ let compiler_variants arch {major; minor; _} =
     | 4,4,_ -> [[]; [`Flambda]]
     | 4,3,_ -> [[]; [`Flambda]]
     | _ -> [[]]
+
+let trunk_variants (arch:arch) : Configure_options.o list list =
+  let base = [[`No_naked_pointers]; [`Afl]; [`Flambda]; [`Disable_flat_float_array]] in
+  let arch_opts =
+    match arch with
+    |`X86_64 -> [[`Frame_pointer]; [`Frame_pointer;`Flambda]]
+    |_ -> []
+  in
+  base @ arch_opts
 
 module Sources = struct
   let trunk = Releases.v4_12

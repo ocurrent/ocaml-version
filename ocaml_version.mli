@@ -334,9 +334,12 @@ module Configure_options : sig
   type o =
     [ `Afl
     | `Default_unsafe_string
+    | `Disable_flat_float_array
     | `Flambda
     | `Force_safe_string
-    | `Frame_pointer ]
+    | `Frame_pointer
+    | `No_naked_pointers ]
+
   (** Configuration options available at compiler build time. *)
 
   val to_string : o -> string
@@ -345,13 +348,17 @@ module Configure_options : sig
   val to_description : o -> string
   (** [to_description o] returns a human-readable representation of {!o}. *)
 
-  val to_configure_flag : o -> string
+  val to_configure_flag : t -> o -> string
   (** [to_configure_flag o] returns a string that can be passed to OCaml's [configure] script to activate that feature. *)
 end
 
 val compiler_variants : arch -> t -> Configure_options.o list list
 (** [compiler_variants v] returns a list of configuration options that are available and useful
     for version [v] of the compiler. *)
+
+val trunk_variants : arch -> Configure_options.o list list
+(** [trunk_variants v] returns a list of configurations that should be working and tested
+    on the trunk version of the compiler. *)
 
 (** Opam compiler switches.
     These are available from the public {{:https://github.com/ocaml/opam-repository}opam-repository}. *)
