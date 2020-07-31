@@ -179,6 +179,36 @@ let arch_of_string_exn a =
   | Result.Ok a -> a
   | Result.Error (`Msg m) -> raise (Invalid_argument m)
 
+let to_opam_arch = function
+  | `I386 -> "x86_32"
+  | `X86_64 -> "x86_64"
+  | `Ppc64le -> "ppc64"
+  | `Aarch32 -> "arm32"
+  | `Aarch64 -> "arm64"
+
+let of_opam_arch = function
+  | "x86_32" -> Some `I386
+  | "x86_64" -> Some `X86_64
+  | "ppc64" -> Some `Ppc64le
+  | "arm32" -> Some `Aarch32
+  | "arm64" -> Some `Aarch64
+  | _ -> None
+
+let to_docker_arch = function
+   | `I386 -> "386"
+   | `X86_64 -> "amd64"
+   | `Ppc64le -> "ppc64le"
+   | `Aarch32 -> "arm"
+   | `Aarch64 -> "arm64"
+
+let of_docker_arch = function
+  | "386" -> Some `I386
+  | "amd64" -> Some `X86_64
+  | "ppc64le" -> Some `Ppc64le
+  | "arm" -> Some `Aarch32
+  | "arm64" -> Some `Aarch64
+  | _ -> None
+
 module Since = struct
   let bytes = Releases.v4_03_0
 

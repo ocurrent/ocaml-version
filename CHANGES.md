@@ -1,4 +1,4 @@
-## v3.0.0 (2020-07-29)
+## v3.0.0 (dev)
 
 * Change signature of `Configure_options.to_configure_flag` to
   take an OCaml version, and add support for post-autoconf
@@ -6,6 +6,8 @@
 * Add some extra configure options for modern OCaml.
 * Add a `trunk_variants` that has additional tests that a
   full OCaml test run can use (like disable-flat-float-array).
+* Add conversion functions to go from Docker and opam
+  representations of architecture strings (@avsm)
 
 ## v2.6.1 (2020-07-15)
 

@@ -100,6 +100,23 @@ val arch_is_32bit: arch -> bool
 (** [arch_is_32bit t] will return [true] if the architecture has
      a 32-bit wordsize. *)
 
+val to_opam_arch : arch -> string
+(** [to_opam_arch arch] will return a string that is compatible
+    with opam's [%{arch}%] variable. *)
+
+val of_opam_arch : string -> arch option
+(** [of_opam_arch s] will try to convert [s] that represents an
+    opam [%{arch}%] variable to an {!arch} value. *)
+
+val to_docker_arch : arch -> string
+(** [to_docker_arch arch] will return a string that is compatible
+    with a Docker multiarch property.  This can be used in
+    [--platform] flags to [docker run], for example. *)
+
+val of_docker_arch : string -> arch option
+(** [of_docker_arch s] will try to convert [s] that represents
+    a Docker multiarch variable to an {!arch} value. *)
+
 (** {2 Accessors} *)
 
 val major : t -> int
