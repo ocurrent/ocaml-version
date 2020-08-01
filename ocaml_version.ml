@@ -293,7 +293,7 @@ module Configure_options = struct
   let of_t t =
     match t.extra with None -> Ok [] | Some extra ->
     String.split_on_char '+' extra |>
-    List.map (fun b -> prerr_endline b;match of_string b with
+    List.map (fun b -> match of_string b with
       | None -> Error (`Msg ("unknown variant: " ^ b))
       | Some v -> Ok v) |>
     List.fold_left (fun a b ->
