@@ -9,8 +9,8 @@
 * Add conversion functions to go from Docker and opam
   representations of architecture strings (@avsm)
 * Add comparison and equality functions to `Configure_options`.
-* Remove dependency on Result compatibility module, which
-  bumps up the minimum OCaml version to 4.03.0 (@avsm)
+* Remove dependency on Result compatibility module and use
+  Stdlib, which bumps up the minimum OCaml version to 4.07.0 (@avsm)
 
 ## v2.6.1 (2020-07-15)
 
