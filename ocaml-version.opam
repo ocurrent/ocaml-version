@@ -7,9 +7,8 @@ homepage: "https://github.com/ocurrent/ocaml-version"
 doc: "https://ocurrent.github.io/ocaml-version/doc"
 bug-reports: "https://github.com/ocurrent/ocaml-version/issues"
 depends: [
-  "ocaml" {>= "4.02.0"}
+  "ocaml" {>= "4.03.0"}
   "dune"
-  "result"
 ]
 build: [
   ["dune" "subst"] {pinned}

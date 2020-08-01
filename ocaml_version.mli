@@ -40,7 +40,7 @@ val to_string : ?sep:char -> t -> string
     Docker container tags from OCaml version strings, where
     only dashes and alphanumeric characters are allowed. *)
 
-val of_string : string -> (t, [> `Msg of string ]) Result.result
+val of_string : string -> (t, [> `Msg of string ]) result
 (** [of_string t] will parse the version string in [t].
     The return value is compatible with the {!Result}
     combinators defined in the [rresult] library. *)
@@ -84,7 +84,7 @@ val string_of_arch : arch -> string
     {{:https://golang.org/doc/install/source#environment}GOARCH}
     convention used by Golang. *)
 
-val arch_of_string : string -> (arch, [> `Msg of string ]) Result.result
+val arch_of_string : string -> (arch, [> `Msg of string ]) result
 (** [arch_of_string t] will parse the architecture string in [t].
     The return value is compatible with the {!Result}
     combinators defined in the [rresult] library. This function
@@ -366,7 +366,7 @@ module Configure_options : sig
   (** [of_string s] will parse the output of {!to_string} back into an option {!o}. Returns {!None} if
       the string input is unknown. *)
 
-  val of_t : t -> (o list, [> `Msg of string ]) Result.result
+  val of_t : t -> (o list, [> `Msg of string ]) result
   (** [of_t t] will parse the [extra] field of [t] and return a list of configure options that it
       represents. Unknown options in the extra field will result in an [Error] being returned. *)
 

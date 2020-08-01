@@ -42,7 +42,7 @@ let parse s =
     end
 
 let of_string s =
-  try Result.Ok (parse s) with
+  try Ok (parse s) with
   | _ -> Error (`Msg (Printf.sprintf "Unable to parse OCaml version '%s'" s))
 
 let of_string_exn s =
@@ -167,17 +167,17 @@ let string_of_arch = function
   | `I386 -> "i386"
 
 let arch_of_string = function
-  | "arm64" | "aarch64" -> Result.Ok `Aarch64
-  | "amd64" | "x86_64" -> Result.Ok `X86_64
-  | "i386"  | "i686" | "686" | "386" -> Result.Ok `I386
-  | "arm32" | "arm32v7" | "aarch32" -> Result.Ok `Aarch32
-  | "ppc64le" -> Result.Ok `Ppc64le
-  | arch -> Result.Error (`Msg ("Unknown architecture " ^ arch))
+  | "arm64" | "aarch64" -> Ok `Aarch64
+  | "amd64" | "x86_64" -> Ok `X86_64
+  | "i386"  | "i686" | "686" | "386" -> Ok `I386
+  | "arm32" | "arm32v7" | "aarch32" -> Ok `Aarch32
+  | "ppc64le" -> Ok `Ppc64le
+  | arch -> Error (`Msg ("Unknown architecture " ^ arch))
 
 let arch_of_string_exn a =
   match arch_of_string a with
-  | Result.Ok a -> a
-  | Result.Error (`Msg m) -> raise (Invalid_argument m)
+  | Ok a -> a
+  | Error (`Msg m) -> raise (Invalid_argument m)
 
 let to_opam_arch = function
   | `I386 -> "x86_32"

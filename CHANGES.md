@@ -2,13 +2,15 @@
 
 * Change signature of `Configure_options.to_configure_flag` to
   take an OCaml version, and add support for post-autoconf
-  flags in OCaml 4.08+.
-* Add some extra configure options for modern OCaml.
+  flags in OCaml 4.08+ (#13 @avsm).
+* Add some extra configure options for modern OCaml (@avsm).
 * Add a `trunk_variants` that has additional tests that a
   full OCaml test run can use (like disable-flat-float-array).
 * Add conversion functions to go from Docker and opam
   representations of architecture strings (@avsm)
 * Add comparison and equality functions to `Configure_options`.
+* Remove dependency on Result compatibility module, which
+  bumps up the minimum OCaml version to 4.03.0 (@avsm)
 
 ## v2.6.1 (2020-07-15)
 
