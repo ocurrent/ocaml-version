@@ -6,11 +6,18 @@
 * Add some extra configure options for modern OCaml (@avsm).
 * Add a `trunk_variants` that has additional tests that a
   full OCaml test run can use (like disable-flat-float-array).
-* Add conversion functions to go from Docker and opam
-  representations of architecture strings (@avsm)
 * Add comparison and equality functions to `Configure_options`.
 * Remove dependency on Result compatibility module and use
   Stdlib, which bumps up the minimum OCaml version to 4.07.0 (@avsm)
+
+* Add conversion functions to go from Docker and opam
+  representations of architecture strings (@avsm)
+
+Base images:
+* Remove safe-string variants from the compiler build images,
+  as the era of safe string migration is behind us.
+* Add in no-naked-pointers, disable-float-array to compiler
+  trunk variants, as they need to be actively tested.
 
 ## v2.6.1 (2020-07-15)
 
