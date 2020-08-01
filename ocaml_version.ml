@@ -214,7 +214,7 @@ module Since = struct
 
   let arch (a:arch) =
     match a with
-    | `I386 -> Releases.v4_06_0 (* TODO can be ealier *)
+    | `I386 -> Releases.v4_06_0 (* TODO can be earlier *)
     | `Aarch32 -> Releases.v4_06_0
     | `Aarch64 -> Releases.v4_05_0
     | `Ppc64le -> Releases.v4_06_0
@@ -235,7 +235,24 @@ module Has = struct
 end
 
 module Configure_options = struct
-  type o = [ `Afl | `Flambda | `Default_unsafe_string | `Force_safe_string | `Frame_pointer | `No_naked_pointers | `Disable_flat_float_array ]
+  type o = [
+      `Afl
+    | `Default_unsafe_string
+    | `Disable_flat_float_array
+    | `Flambda
+    | `Force_safe_string
+    | `Frame_pointer
+    | `No_naked_pointers ]
+
+  let compare a b =
+    (* For backwards compat reasons, fp always comes first. *)
+    match a,b with
+    | `Frame_pointer, `Frame_pointer -> 0
+    | `Frame_pointer, _ -> (-1)
+    | _, `Frame_pointer -> 1
+    | a, b -> Stdlib.compare a b
+
+  let equal a b = compare a b = 0
 
   let to_description (t:o) =
     match t with
@@ -257,6 +274,34 @@ module Configure_options = struct
     | `No_naked_pointers -> "nnp"
     | `Disable_flat_float_array -> "no-flat-float-array"
 
+  let of_string = function
+    | "afl" -> Some `Afl
+    | "flambda" -> Some `Flambda
+    | "default-unsafe-string" -> Some `Default_unsafe_string
+    | "force-safe-string" -> Some `Force_safe_string
+    | "fp" -> Some `Frame_pointer
+    | "nnp" -> Some `No_naked_pointers
+    | "no-flat-float-array" -> Some `Disable_flat_float_array
+    | _ -> None
+
+  let to_t t = function
+    | [] -> with_variant t None
+    | ol ->
+      List.sort compare ol |> List.map to_string |> String.concat "+" |>
+      fun s -> with_variant t (Some s)
+
+  let of_t t =
+    match t.extra with None -> Ok [] | Some extra ->
+    String.split_on_char '+' extra |>
+    List.map (fun b -> prerr_endline b;match of_string b with
+      | None -> Error (`Msg ("unknown variant: " ^ b))
+      | Some v -> Ok v) |>
+    List.fold_left (fun a b ->
+      match a, b with
+      | Ok a, Ok b -> Ok (List.sort compare (b :: a))
+      | _, Error b -> Error b
+      | Error a, _-> Error a) (Ok [])
+
   let to_configure_flag {major; minor; _} o =
     if major < 5 && minor < 8 then (* pre autoconf *)
       match o with
@@ -277,32 +322,6 @@ module Configure_options = struct
       | `Disable_flat_float_array -> "--disable-flat-float-array"
 end
 
-let compiler_variants arch {major; minor; _} =
-    match major,minor,arch with
-    | 4,12,`X86_64 -> [[]; [`Afl]; [`Flambda]; [`No_naked_pointers]]
-    | 4,11,`X86_64 -> [[]; [`Afl]; [`Flambda]]
-    | 4,10,`X86_64 -> [[]; [`Afl]; [`Flambda]]
-    | 4,9,`X86_64 -> [[]; [`Afl]; [`Flambda]; [`Frame_pointer]; [`Frame_pointer;`Flambda]; [`Default_unsafe_string]]
-    | 4,8,`X86_64 -> [[]; [`Afl]; [`Flambda]; [`Frame_pointer]; [`Frame_pointer;`Flambda]; [`Default_unsafe_string]; [`Force_safe_string]]
-    | 4,10,_ -> [[]; [`Afl]; [`Flambda]]
-    | 4,9,_ -> [[]; [`Afl]; [`Flambda]; [`Default_unsafe_string]]
-    | 4,8,_ -> [[]; [`Afl]; [`Flambda]; [`Default_unsafe_string]; [`Force_safe_string]]
-    | 4,7,_ -> [[]; [`Afl]; [`Flambda]; [`Default_unsafe_string]; [`Force_safe_string]]
-    | 4,6,_ -> [[]; [`Afl]; [`Flambda]; [`Default_unsafe_string]; [`Force_safe_string]]
-    | 4,5,_ -> [[]; [`Afl]; [`Flambda]]
-    | 4,4,_ -> [[]; [`Flambda]]
-    | 4,3,_ -> [[]; [`Flambda]]
-    | _ -> [[]]
-
-let trunk_variants (arch:arch) : Configure_options.o list list =
-  let base = [[`No_naked_pointers]; [`Afl]; [`Flambda]; [`Disable_flat_float_array]] in
-  let arch_opts =
-    match arch with
-    |`X86_64 -> [[`Frame_pointer]; [`Frame_pointer;`Flambda]]
-    |_ -> []
-  in
-  base @ arch_opts
-
 module Sources = struct
   let trunk = Releases.v4_12
 
@@ -311,6 +330,33 @@ module Sources = struct
     | major, minor, _ when major = trunk.major && minor = trunk.minor -> "trunk"
     | _ -> to_string (with_variant ov None)
 end
+
+let trunk_variants (arch:arch) =
+  let base = [[`No_naked_pointers]; [`Afl]; [`Flambda]; [`Disable_flat_float_array]] in
+  let arch_opts =
+    match arch with
+    |`X86_64 -> [[`Frame_pointer]; [`Frame_pointer;`Flambda]]
+    |_ -> []
+  in
+  List.map (Configure_options.to_t Sources.trunk) (base @ arch_opts)
+
+let compiler_variants arch ({major; minor; _} as t) =
+  let f = List.map (Configure_options.to_t t) in
+  match major,minor,arch with
+    | 4,12,arch  -> trunk_variants arch
+    | 4,11,`X86_64 -> f [[]; [`Afl]; [`Flambda]]
+    | 4,10,`X86_64 -> f [[]; [`Afl]; [`Flambda]]
+    | 4,9,`X86_64 -> f [[]; [`Afl]; [`Flambda]; [`Frame_pointer]; [`Frame_pointer;`Flambda]; [`Default_unsafe_string]]
+    | 4,8,`X86_64 -> f [[]; [`Afl]; [`Flambda]; [`Frame_pointer]; [`Frame_pointer;`Flambda]; [`Default_unsafe_string]; [`Force_safe_string]]
+    | 4,10,_ -> f [[]; [`Afl]; [`Flambda]]
+    | 4,9,_ -> f [[]; [`Afl]; [`Flambda]; [`Default_unsafe_string]]
+    | 4,8,_ -> f [[]; [`Afl]; [`Flambda]; [`Default_unsafe_string]; [`Force_safe_string]]
+    | 4,7,_ -> f [[]; [`Afl]; [`Flambda]; [`Default_unsafe_string]; [`Force_safe_string]]
+    | 4,6,_ -> f [[]; [`Afl]; [`Flambda]; [`Default_unsafe_string]; [`Force_safe_string]]
+    | 4,5,_ -> f [[]; [`Afl]; [`Flambda]]
+    | 4,4,_ -> f [[]; [`Flambda]]
+    | 4,3,_ -> f [[]; [`Flambda]]
+    | _ -> f [[]]
 
 module Opam = struct
 
@@ -325,12 +371,9 @@ module Opam = struct
     let variant_switch t vs =
       match vs with
       | [] -> with_variant t None
-      | vs ->
-        let v = String.concat "+" (List.map Configure_options.to_string vs) in
-        with_variant t (Some v)
+      | vs -> Configure_options.to_t t vs
 
     let switches arch t =
-      compiler_variants arch t |>
-      List.map (fun vs -> variant_switch t vs)
+      compiler_variants arch t
   end
 end

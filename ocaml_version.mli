@@ -362,19 +362,38 @@ module Configure_options : sig
   val to_string : o -> string
   (** [to_string o] returns a compact representation of {!o} suitable for use in opam version strings. *)
 
+  val of_string : string -> o option
+  (** [of_string s] will parse the output of {!to_string} back into an option {!o}. Returns {!None} if
+      the string input is unknown. *)
+
+  val of_t : t -> (o list, [> `Msg of string ]) Result.result
+  (** [of_t t] will parse the [extra] field of [t] and return a list of configure options that it
+      represents. Unknown options in the extra field will result in an [Error] being returned. *)
+
+  val to_t : t -> o list -> t
+  (* [to_t t ol] will replace the [extra] field of [t] with the list of options represented in [ol]. *)
+
   val to_description : o -> string
   (** [to_description o] returns a human-readable representation of {!o}. *)
 
   val to_configure_flag : t -> o -> string
   (** [to_configure_flag o] returns a string that can be passed to OCaml's [configure] script to activate that feature. *)
+
+  val compare : o -> o -> int
+  (** [compare a b] will return -1 if [a] is < [b], 0 if they are equal, or 1 if [a] > [b]. For backwards
+      compatibility reasons, {!`Frame_pointer} always comes first in comparisons. *)
+
+  val equal : o -> o -> bool
+  (** [equal a b] will return {!true} if [a=b] *)
+
 end
 
-val compiler_variants : arch -> t -> Configure_options.o list list
+val compiler_variants : arch -> t -> t list
 (** [compiler_variants v] returns a list of configuration options that are available and useful
     for version [v] of the compiler. *)
 
-val trunk_variants : arch -> Configure_options.o list list
-(** [trunk_variants v] returns a list of configurations that should be working and tested
+val trunk_variants : arch -> t list
+(** [trunk_variants v] returns a list of OCaml version configurations that should be working and tested
     on the trunk version of the compiler. *)
 
 (** Opam compiler switches.

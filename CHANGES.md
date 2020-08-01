@@ -8,6 +8,7 @@
   full OCaml test run can use (like disable-flat-float-array).
 * Add conversion functions to go from Docker and opam
   representations of architecture strings (@avsm)
+* Add comparison and equality functions to `Configure_options`.
 
 ## v2.6.1 (2020-07-15)
 
