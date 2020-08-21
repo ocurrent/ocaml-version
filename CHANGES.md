@@ -1,5 +1,8 @@
 ## v3.0.0 (dev)
 
+* Update for release of 4.11.0 and 4.10.1.
+
+Interface changes:
 * Change signature of `Configure_options.to_configure_flag` to
   take an OCaml version, and add support for post-autoconf
   flags in OCaml 4.08+ (#13 @avsm).
@@ -9,7 +12,6 @@
 * Add comparison and equality functions to `Configure_options`.
 * Remove dependency on Result compatibility module and use
   Stdlib, which bumps up the minimum OCaml version to 4.07.0 (@avsm)
-
 * Add conversion functions to go from Docker and opam
   representations of architecture strings (@avsm)
 

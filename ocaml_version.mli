@@ -264,6 +264,9 @@ module Releases : sig
   val v4_10_0 : t
   (** Version 4.10.0 *)
 
+  val v4_10_1 : t
+  (** Version 4.10.1 *)
+
   val v4_10 : t
   (** Latest release in the 4.10.x series *)
 
