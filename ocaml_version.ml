@@ -14,32 +14,47 @@
  *
 *)
 
-type t = { major: int; minor: int; patch: int option; extra: string option }
-let v ?patch ?extra major minor = { major; minor; patch; extra }
+type t = { major: int; minor: int; patch: int option; prerelease:bool; extra: string option }
+let v ?patch ?(prerelease=false) ?extra major minor =
+  match extra with
+  | None -> { major; minor; patch; prerelease=false; extra = None }
+  | Some _ as extra ->
+    { major; minor; patch; prerelease; extra }
 
 let major { major; _ } = major
 let minor { minor; _ } = minor
 let patch { patch; _ } = patch
 let extra { extra; _ } = extra
+let prerelease { prerelease; _ } = prerelease
 
-let to_string ?(sep='+') =
+let pp_sep ~prerelease_sep ~sep ~prerelease () = match prerelease_sep, sep, prerelease with
+  | Some x, _, true ->  Printf.sprintf "%c" x
+  | None, None, true -> "~"
+  | _, None, false -> "+"
+  | _, Some c, false -> Printf.sprintf "%c" c
+  | None, Some c, true -> Printf.sprintf "%c%c" c c
+
+let to_string ?prerelease_sep ?sep =
   function
-  | {major;minor;patch=None;extra=None} -> Printf.sprintf "%d.%02d" major minor
-  | {major;minor;patch=Some patch;extra=None} -> Printf.sprintf "%d.%02d.%d" major minor patch
-  | {major;minor;patch=Some patch;extra=Some extra} -> Printf.sprintf "%d.%02d.%d%c%s" major minor patch sep extra
-  | {major;minor;patch=None;extra=Some extra} -> Printf.sprintf "%d.%02d%c%s" major minor sep extra
+  | {major;minor;patch=None;extra=None; prerelease=_} -> Printf.sprintf "%d.%02d" major minor
+  | {major;minor;patch=Some patch;extra=None;prerelease=_} ->
+    Printf.sprintf "%d.%02d.%d" major minor patch
+  | {major;minor;patch=Some patch;prerelease;extra=Some extra} ->
+    Printf.sprintf "%d.%02d.%d%t%s" major minor patch (pp_sep ~prerelease_sep ~sep ~prerelease) extra
+  | {major;minor;patch=None;prerelease;extra=Some extra} ->
+    Printf.sprintf "%d.%02d%t%s" major minor (pp_sep  ~prerelease_sep ~sep ~prerelease) extra
 
 let parse s =
-  try Scanf.sscanf s "%d.%d.%d+%s" (fun major minor patch extra -> v ~patch ~extra major minor)
-  with End_of_file | Scanf.Scan_failure _ -> begin
-      try Scanf.sscanf s "%d.%d+%s" (fun major minor extra -> v ~extra major minor)
-      with End_of_file | Scanf.Scan_failure _ -> begin
-          try Scanf.sscanf s "%d.%d.%d" (fun major minor patch -> v ~patch major minor)
-          with End_of_file | Scanf.Scan_failure _ -> begin
-              Scanf.sscanf s "%d.%d" (fun major minor -> v major minor)
-            end
-        end
-    end
+  let build patch major minor sep extra =
+    match sep, extra with
+    | "~", extra -> v ?patch ~prerelease:true ~extra major minor
+    | "+", extra -> v ?patch ~prerelease:false ~extra major minor
+    | "", "" -> v ?patch major minor
+    | _ -> raise (Scanf.Scan_failure ("invalid ocaml version: "^ s))
+  in
+  try Scanf.sscanf s "%d.%d.%d%1[+~]%s" (fun major minor patch -> build (Some patch) major minor)
+  with End_of_file | Scanf.Scan_failure _ ->
+    Scanf.sscanf s "%d.%d%1[+~]%s" (build None)
 
 let of_string s =
   try Ok (parse s) with
@@ -56,21 +71,27 @@ let ( ++ ) x fn =
   | 0 -> fn ()
   | r -> r
 
-let equal {major; minor; patch; extra} a =
+let equal {major; minor; patch; prerelease; extra} a =
   (major : int) = a.major &&
   (minor : int) = a.minor &&
   (patch : int option) = a.patch &&
+  (prerelease: bool) = a.prerelease &&
   (extra : string option) = a.extra
 
-let compare {major; minor; patch; extra} a =
+
+let compare {major; minor; patch; prerelease; extra} a =
   compare major a.major ++ fun () ->
     compare minor a.minor ++ fun () ->
       compare patch a.patch ++ fun () ->
-        compare extra a.extra
+        compare a.prerelease prerelease ++ fun () ->
+          compare extra a.extra
 
 let sys_version = of_string_exn Sys.ocaml_version
 
-let with_variant t extra = { t with extra }
+let with_variant t extra =
+  match extra with
+  | None -> { t with extra; prerelease=false }
+  | Some _ -> { t with extra }
 let without_variant t = { t with extra=None }
 let with_patch t patch = { t with patch }
 let without_patch t = { t with patch=None }
