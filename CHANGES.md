@@ -1,3 +1,7 @@
+## dev
+
+* Add OCaml 4.11.1 release. (@avsm)
+
 ## v3.0.0 (2020-08-23)
 
 * Update for release of 4.11.0 and 4.10.1.
