@@ -335,7 +335,7 @@ module Since : sig
   val bytes: t
   (** [bytes] is the release that the {!Bytes} module first appeared in. *)
 
-  val arch : arch -> t 
+  val arch : arch -> t
   (** [arch a] will return the first release of OCaml that the architecture
       was reasonably stably supported on. *)
 end
@@ -408,8 +408,12 @@ module Opam : sig
 
   (** Opam 2.0 functions *)
   module V2 : sig
+    val package : t -> (string * string)
+    (** [package t] returns the [(name, version)] pair corresponding to the opam2 package
+        for that compiler version. *)
+
     val name : t -> string
-    (** [package t] returns the opam2 package for that compiler version. *)
+    (** [name t] returns the opam2 package for that compiler version. *)
 
     val variant_switch : t -> Configure_options.o list -> t
     (** [variant_switch t cs] returns an OCaml version [t] whose

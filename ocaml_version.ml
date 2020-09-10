@@ -364,12 +364,16 @@ let compiler_variants arch ({major; minor; _} as t) =
 module Opam = struct
 
   module V2 = struct
-    let name t =
+    let package t =
       match t.extra with
-      | Some extra when Releases.is_dev t -> Printf.sprintf "ocaml-variants.%s+trunk+%s" (to_string (without_variant t)) extra
-      | Some _ -> "ocaml-variants." ^ (to_string t)
-      | None when Releases.is_dev t -> Printf.sprintf "ocaml-variants.%s+trunk" (to_string t)
-      | None -> "ocaml-base-compiler." ^ (to_string t)
+      | Some extra when Releases.is_dev t -> ("ocaml-variants", Printf.sprintf "%s+trunk+%s" (to_string (without_variant t)) extra)
+      | Some _ -> ("ocaml-variants", to_string t)
+      | None when Releases.is_dev t -> ("ocaml-variants", Printf.sprintf "%s+trunk" (to_string t))
+      | None -> ("ocaml-base-compiler", to_string t)
+
+    let name t =
+      let (name, version) = package t in
+      name ^ "." ^ version
 
     let variant_switch t vs =
       match vs with
