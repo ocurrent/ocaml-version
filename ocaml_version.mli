@@ -22,7 +22,7 @@
 type t
 (** Type of an OCaml version string *)
 
-val v : ?patch:int -> ?prerelease:bool -> ?extra:string -> int -> int -> t
+val v : ?patch:int -> ?prerelease:string -> ?extra:string -> int -> int -> t
 (** [v ?patch ?prerelease ?extra major minor] will construct
     an OCaml version string with the appropriate parameters.
     The [patch], [prerelease], and [extra] indicators are
@@ -41,7 +41,7 @@ val to_string : ?prerelease_sep:char -> ?sep:char -> t -> string
     and potentially [prerelease_sep]. If [sep] is defined but
     not [prerelease_sep], the prerelease separator is represented by
     two [sep] characters.
-    One such usecase is to generate Docker container tags
+    One such use case is to generate Docker container tags
     from OCaml version strings, where only dashes and alphanumeric
     characters are allowed. *)
 
@@ -139,11 +139,11 @@ val patch : t -> int option
     release.  For example, [of_string "4.03.0" |> minor] will
     return [Some 0]. *)
 
-val prerelease : t -> bool
-(** [prerelease t] will return true if [t] correspond to an
-    explicit OCaml prerelease.
+val prerelease : t -> string option
+(** [prerelease t] will return the prerelease extra string of an
+    OCaml prerelease.
     For example, [of_string "4.12.0~beta+flambda" |> prerelease] will
-    return [true]. *)
+    return [Some "beta"]. *)
 
 val extra : t -> string option
 (** [extra t] will return the additional information string of

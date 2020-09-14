@@ -14,12 +14,9 @@
  *
 *)
 
-type t = { major: int; minor: int; patch: int option; prerelease:bool; extra: string option }
-let v ?patch ?(prerelease=false) ?extra major minor =
-  match extra with
-  | None -> { major; minor; patch; prerelease=false; extra = None }
-  | Some _ as extra ->
-    { major; minor; patch; prerelease; extra }
+type t = { major: int; minor: int; patch: int option; prerelease:string option; extra: string option }
+let v ?patch ?prerelease ?extra major minor =
+  { major; minor; patch; prerelease; extra }
 
 let major { major; _ } = major
 let minor { minor; _ } = minor
@@ -27,28 +24,39 @@ let patch { patch; _ } = patch
 let extra { extra; _ } = extra
 let prerelease { prerelease; _ } = prerelease
 
-let pp_sep ~prerelease_sep ~sep ~prerelease () = match prerelease_sep, sep, prerelease with
-  | Some x, _, true ->  Printf.sprintf "%c" x
-  | None, None, true -> "~"
-  | _, None, false -> "+"
-  | _, Some c, false -> Printf.sprintf "%c" c
-  | None, Some c, true -> Printf.sprintf "%c%c" c c
+let choose_seps ~prerelease_sep ~sep = match prerelease_sep, sep with
+  | None, None -> "~", "+"
+  | Some x, Some y -> String.make 1 x, String.make 1 y
+  | Some x, None -> String.make 1 x, "+"
+  | None, Some x -> String.make 2 x, String.make 1 x
 
-let to_string ?prerelease_sep ?sep =
-  function
-  | {major;minor;patch=None;extra=None; prerelease=_} -> Printf.sprintf "%d.%02d" major minor
-  | {major;minor;patch=Some patch;extra=None;prerelease=_} ->
-    Printf.sprintf "%d.%02d.%d" major minor patch
-  | {major;minor;patch=Some patch;prerelease;extra=Some extra} ->
-    Printf.sprintf "%d.%02d.%d%t%s" major minor patch (pp_sep ~prerelease_sep ~sep ~prerelease) extra
-  | {major;minor;patch=None;prerelease;extra=Some extra} ->
-    Printf.sprintf "%d.%02d%t%s" major minor (pp_sep  ~prerelease_sep ~sep ~prerelease) extra
+let with_sep ~sep = function
+  | None -> ""
+  | Some x -> sep ^ x
+
+let to_string ?prerelease_sep ?sep v =
+  let presep, sep = choose_seps ~prerelease_sep ~sep in
+  let prerelease = with_sep ~sep:presep v.prerelease in
+  let extra = with_sep ~sep v.extra in
+  match v.patch with
+  | None ->
+    Printf.sprintf "%d.%02d%s%s" v.major v.minor prerelease extra
+  | Some patch ->
+    Printf.sprintf "%d.%02d.%d%s%s" v.major v.minor patch prerelease extra
 
 let parse s =
   let build patch major minor sep extra =
     match sep, extra with
-    | "~", extra -> v ?patch ~prerelease:true ~extra major minor
-    | "+", extra -> v ?patch ~prerelease:false ~extra major minor
+    | "~", extra ->
+      begin match String.index_opt extra '+' with
+        | None -> v ?patch ~prerelease:extra major minor
+        | Some r ->
+          let prerelease = String.sub extra 0 r in
+          let after_plus = r + 1 in
+          let extra = String.sub extra after_plus (String.length extra - after_plus) in
+          v ?patch ~prerelease ~extra major minor
+      end
+    | "+", extra -> v ?patch ~extra:extra major minor
     | "", "" -> v ?patch major minor
     | _ -> raise (Scanf.Scan_failure ("invalid ocaml version: "^ s))
   in
@@ -75,23 +83,26 @@ let equal {major; minor; patch; prerelease; extra} a =
   (major : int) = a.major &&
   (minor : int) = a.minor &&
   (patch : int option) = a.patch &&
-  (prerelease: bool) = a.prerelease &&
+  (prerelease: string option) = a.prerelease &&
   (extra : string option) = a.extra
 
+let compare_prerelease (x:string option) (y:string option) = match x, y with
+    | Some x, Some y -> compare x y
+  (* reversed order None > Some _  *)
+    | None, None -> 0
+    | None, Some _ -> 1
+    | Some _, None -> -1
 
 let compare {major; minor; patch; prerelease; extra} a =
   compare major a.major ++ fun () ->
     compare minor a.minor ++ fun () ->
       compare patch a.patch ++ fun () ->
-        compare a.prerelease prerelease ++ fun () ->
+        compare_prerelease prerelease a.prerelease ++ fun () ->
           compare extra a.extra
 
 let sys_version = of_string_exn Sys.ocaml_version
 
-let with_variant t extra =
-  match extra with
-  | None -> { t with extra; prerelease=false }
-  | Some _ -> { t with extra }
+let with_variant t extra = { t with extra }
 let without_variant t = { t with extra=None }
 let with_patch t patch = { t with patch }
 let without_patch t = { t with patch=None }
