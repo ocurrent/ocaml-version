@@ -9,6 +9,7 @@ bug-reports: "https://github.com/ocurrent/ocaml-version/issues"
 depends: [
   "ocaml" {>= "4.07.0"}
   "dune"
+  "alcotest" {with-test}
 ]
 build: [
   ["dune" "subst"] {pinned}
