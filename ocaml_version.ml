@@ -128,24 +128,27 @@ module Releases = struct
   let v4_12_0 = of_string_exn "4.12.0"
   let v4_12 = v4_12_0
 
+  let v4_13_0 = of_string_exn "4.13.0"
+  let v4_13 = v4_13_0
+
   let all_patches = [
     v4_00_1; v4_01_0; v4_02_0; v4_02_1; v4_02_2;
     v4_02_3; v4_03_0; v4_04_0; v4_04_1; v4_04_2;
     v4_05_0; v4_06_0; v4_06_1; v4_07_0; v4_07_1;
     v4_08_0; v4_08_1; v4_09_0; v4_09_1; v4_10_0;
-    v4_10_1; v4_11_0; v4_11_1; v4_12_0 ]
+    v4_10_1; v4_11_0; v4_11_1; v4_12_0; v4_13_0 ]
 
   let all = [ v4_00; v4_01; v4_02; v4_03; v4_04;
               v4_05; v4_06; v4_07; v4_08; v4_09;
-              v4_10; v4_11; v4_12 ]
+              v4_10; v4_11; v4_12; v4_13 ]
 
-  let unreleased_betas = [ ]
+  let unreleased_betas = [ v4_12 ]
 
   let recent = [ v4_02; v4_03; v4_04; v4_05; v4_06; v4_07; v4_08; v4_09; v4_10; v4_11 ]
 
   let latest = v4_11
 
-  let dev = [ v4_12 ]
+  let dev = [ v4_12; v4_13 ]
 
   let is_dev t =
     let t = with_just_major_and_minor t in
@@ -325,7 +328,7 @@ module Configure_options = struct
 end
 
 module Sources = struct
-  let trunk = Releases.v4_12
+  let trunk = Releases.v4_13
 
   let git_tag ({major; minor; patch; _ } as ov) =
     match major, minor, patch with
