@@ -22,23 +22,28 @@
 type t
 (** Type of an OCaml version string *)
 
-val v : ?patch:int -> ?extra:string -> int -> int -> t
-(** [v ?patch ?extra major minor] will construct an OCaml
-    version string with the appropriate parameters.  The
-    [patch] and [extra] indicators are optional, but it is
-    conventional to include a [patch] value of 0 for most
-    recent OCaml releases. *)
+val v : ?patch:int -> ?prerelease:string -> ?extra:string -> int -> int -> t
+(** [v ?patch ?prerelease ?extra major minor] will construct
+    an OCaml version string with the appropriate parameters.
+    The [patch], [prerelease], and [extra] indicators are
+    optional, but it is conventional to include a [patch]
+    value of 0 for most recent OCaml releases. *)
 
 (** {2 Parsers and serializers} *)
 
-val to_string : ?sep:char -> t -> string
+val to_string : ?prerelease_sep:char -> ?sep:char -> t -> string
 (** [to_string ?sep t] will convert the version [t] into
     a human-readable representation.  The [sep] will default
-    to [+] which is the normal representation of extra
-    version strings, but can be changed to another character
-    by supplying [sep].  One such usecase is to generate
-    Docker container tags from OCaml version strings, where
-    only dashes and alphanumeric characters are allowed. *)
+    to the normal representation of extra version strings:
+    - [~] for prerelease version
+    - [+] otherwise
+    This can be changed to another character by supplying [sep]
+    and potentially [prerelease_sep]. If [sep] is defined but
+    not [prerelease_sep], the prerelease separator is represented by
+    two [sep] characters.
+    One such use case is to generate Docker container tags
+    from OCaml version strings, where only dashes and alphanumeric
+    characters are allowed. *)
 
 val of_string : string -> (t, [> `Msg of string ]) result
 (** [of_string t] will parse the version string in [t].
@@ -133,6 +138,12 @@ val patch : t -> int option
 (** [patch t] will return the patch version number of an OCaml
     release.  For example, [of_string "4.03.0" |> minor] will
     return [Some 0]. *)
+
+val prerelease : t -> string option
+(** [prerelease t] will return the prerelease extra string of an
+    OCaml prerelease.
+    For example, [of_string "4.12.0~beta+flambda" |> prerelease] will
+    return [Some "beta"]. *)
 
 val extra : t -> string option
 (** [extra t] will return the additional information string of

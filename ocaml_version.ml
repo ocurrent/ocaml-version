@@ -14,32 +14,55 @@
  *
 *)
 
-type t = { major: int; minor: int; patch: int option; extra: string option }
-let v ?patch ?extra major minor = { major; minor; patch; extra }
+type t = { major: int; minor: int; patch: int option; prerelease:string option; extra: string option }
+let v ?patch ?prerelease ?extra major minor =
+  { major; minor; patch; prerelease; extra }
 
 let major { major; _ } = major
 let minor { minor; _ } = minor
 let patch { patch; _ } = patch
 let extra { extra; _ } = extra
+let prerelease { prerelease; _ } = prerelease
 
-let to_string ?(sep='+') =
-  function
-  | {major;minor;patch=None;extra=None} -> Printf.sprintf "%d.%02d" major minor
-  | {major;minor;patch=Some patch;extra=None} -> Printf.sprintf "%d.%02d.%d" major minor patch
-  | {major;minor;patch=Some patch;extra=Some extra} -> Printf.sprintf "%d.%02d.%d%c%s" major minor patch sep extra
-  | {major;minor;patch=None;extra=Some extra} -> Printf.sprintf "%d.%02d%c%s" major minor sep extra
+let choose_seps ~prerelease_sep ~sep = match prerelease_sep, sep with
+  | None, None -> "~", "+"
+  | Some x, Some y -> String.make 1 x, String.make 1 y
+  | Some x, None -> String.make 1 x, "+"
+  | None, Some x -> String.make 2 x, String.make 1 x
+
+let with_sep ~sep = function
+  | None -> ""
+  | Some x -> sep ^ x
+
+let to_string ?prerelease_sep ?sep v =
+  let presep, sep = choose_seps ~prerelease_sep ~sep in
+  let prerelease = with_sep ~sep:presep v.prerelease in
+  let extra = with_sep ~sep v.extra in
+  match v.patch with
+  | None ->
+    Printf.sprintf "%d.%02d%s%s" v.major v.minor prerelease extra
+  | Some patch ->
+    Printf.sprintf "%d.%02d.%d%s%s" v.major v.minor patch prerelease extra
 
 let parse s =
-  try Scanf.sscanf s "%d.%d.%d+%s" (fun major minor patch extra -> v ~patch ~extra major minor)
-  with End_of_file | Scanf.Scan_failure _ -> begin
-      try Scanf.sscanf s "%d.%d+%s" (fun major minor extra -> v ~extra major minor)
-      with End_of_file | Scanf.Scan_failure _ -> begin
-          try Scanf.sscanf s "%d.%d.%d" (fun major minor patch -> v ~patch major minor)
-          with End_of_file | Scanf.Scan_failure _ -> begin
-              Scanf.sscanf s "%d.%d" (fun major minor -> v major minor)
-            end
-        end
-    end
+  let build patch major minor sep extra =
+    match sep, extra with
+    | "~", extra ->
+      begin match String.index_opt extra '+' with
+        | None -> v ?patch ~prerelease:extra major minor
+        | Some r ->
+          let prerelease = String.sub extra 0 r in
+          let after_plus = r + 1 in
+          let extra = String.sub extra after_plus (String.length extra - after_plus) in
+          v ?patch ~prerelease ~extra major minor
+      end
+    | "+", extra -> v ?patch ~extra:extra major minor
+    | "", "" -> v ?patch major minor
+    | _ -> raise (Scanf.Scan_failure ("invalid ocaml version: "^ s))
+  in
+  try Scanf.sscanf s "%d.%d.%d%1[+~]%s" (fun major minor patch -> build (Some patch) major minor)
+  with End_of_file | Scanf.Scan_failure _ ->
+    Scanf.sscanf s "%d.%d%1[+~]%s" (build None)
 
 let of_string s =
   try Ok (parse s) with
@@ -56,17 +79,26 @@ let ( ++ ) x fn =
   | 0 -> fn ()
   | r -> r
 
-let equal {major; minor; patch; extra} a =
+let equal {major; minor; patch; prerelease; extra} a =
   (major : int) = a.major &&
   (minor : int) = a.minor &&
   (patch : int option) = a.patch &&
+  (prerelease: string option) = a.prerelease &&
   (extra : string option) = a.extra
 
-let compare {major; minor; patch; extra} a =
+let compare_prerelease (x:string option) (y:string option) = match x, y with
+    | Some x, Some y -> compare x y
+  (* reversed order None > Some _  *)
+    | None, None -> 0
+    | None, Some _ -> 1
+    | Some _, None -> -1
+
+let compare {major; minor; patch; prerelease; extra} a =
   compare major a.major ++ fun () ->
     compare minor a.minor ++ fun () ->
       compare patch a.patch ++ fun () ->
-        compare extra a.extra
+        compare_prerelease prerelease a.prerelease ++ fun () ->
+          compare extra a.extra
 
 let sys_version = of_string_exn Sys.ocaml_version
 
