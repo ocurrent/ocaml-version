@@ -221,6 +221,8 @@ module Since = struct
     | `Aarch64 -> Releases.v4_05_0
     | `Ppc64le -> Releases.v4_06_0
     | `X86_64 -> Releases.v4_00_0 (* TODO obviously earlier *)
+
+  let autoconf = Releases.v4_08_0
 end
 
 module Has = struct
@@ -232,6 +234,11 @@ module Has = struct
 
   let arch (a:arch) v =
     match compare (Since.arch a) v with
+    |(-1) | 0 -> true
+    |_ -> false
+
+  let autoconf v =
+    match compare Since.autoconf v with
     |(-1) | 0 -> true
     |_ -> false
 end
@@ -304,16 +311,8 @@ module Configure_options = struct
       | _, Error b -> Error b
       | Error a, _-> Error a) (Ok [])
 
-  let to_configure_flag {major; minor; _} o =
-    if major < 5 && minor < 8 then (* pre autoconf *)
-      match o with
-      | `Afl -> "-afl-instrument"
-      | `Flambda -> "-flambda"
-      | `Default_unsafe_string -> "-default-unsafe-string"
-      | `Force_safe_string -> "-force-safe-string"
-      | `Frame_pointer -> "-with-frame-pointer"
-      | _ -> ""
-    else (* post autoconf *)
+  let to_configure_flag t o =
+    if Has.autoconf t then
       match o with
       | `Afl -> "--with-afl"
       | `Flambda -> "--enable-flambda"
@@ -322,6 +321,14 @@ module Configure_options = struct
       | `Frame_pointer -> "--enable-frame-pointers"
       | `No_naked_pointers -> "--disable-naked-pointers"
       | `Disable_flat_float_array -> "--disable-flat-float-array"
+    else
+      match o with
+      | `Afl -> "-afl-instrument"
+      | `Flambda -> "-flambda"
+      | `Default_unsafe_string -> "-default-unsafe-string"
+      | `Force_safe_string -> "-force-safe-string"
+      | `Frame_pointer -> "-with-frame-pointer"
+      | _ -> ""
 end
 
 module Sources = struct
