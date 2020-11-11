@@ -423,10 +423,38 @@ module Opam = struct
   module V2 = struct
     let package t =
       match t.extra with
-      | Some extra when Releases.is_dev t -> ("ocaml-variants", Printf.sprintf "%s+trunk+%s" (to_string (without_variant t)) extra)
+      | Some extra when Releases.is_dev t ->
+          let version =
+            let version = to_string (without_variant t) ^ "+trunk" in
+            (* At present, this layout affects 4.12 only *)
+            if t.major = 4 && t.minor = 12 then
+              version
+            else
+              Printf.sprintf "%s+%s" version extra
+          in
+            ("ocaml-variants", version)
       | Some _ -> ("ocaml-variants", to_string t)
       | None when Releases.is_dev t -> ("ocaml-variants", Printf.sprintf "%s+trunk" (to_string t))
       | None -> ("ocaml-base-compiler", to_string t)
+
+    let additional_packages t =
+      if t.major <> 4 || t.minor <> 12 then
+        []
+      else
+        (* FIXME This is done with ocaml-options packages, not with ocaml-options-only packages.
+                 It's a straightforward adaptation of Configure_options.to_t's logic, but the PR
+                 doesn't include all the required ocaml-options-only-* packages yet *)
+        let option_package = function
+        | `Afl -> Some "ocaml-options-afl"
+        | `Flambda -> Some "ocaml-options-flambda"
+        | `Default_unsafe_string -> Some "ocaml-options-default-unsafe-string"
+        | `Disable_flat_float_array -> Some "ocaml-options-no-flat-float-array"
+        | `Force_safe_string -> None
+        | `Frame_pointer -> Some "ocaml-options-fp"
+        | `No_naked_pointers -> Some "ocaml-options-nnp"
+        in
+          Result.map (List.filter_map option_package) (Configure_options.of_t t)
+          |> Result.value ~default:[]
 
     let name t =
       let (name, version) = package t in
