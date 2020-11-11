@@ -387,11 +387,13 @@ let trunk_variants (arch:arch) =
 let compiler_variants arch ({major; minor; _} as t) =
   let f = List.map (Configure_options.to_t t) in
   match major,minor,arch with
-    | 4,12,arch  -> trunk_variants arch
+    | 4,13,arch  -> trunk_variants arch
+    | 4,12,`X86_64  -> f [[]; [`Afl]; [`Flambda]; [`Frame_pointer]]
     | 4,11,`X86_64 -> f [[]; [`Afl]; [`Flambda]; [`Frame_pointer]]
     | 4,10,`X86_64 -> f [[]; [`Afl]; [`Flambda]; [`Frame_pointer]]
     | 4,9,`X86_64 -> f [[]; [`Afl]; [`Flambda]; [`Frame_pointer]]
     | 4,8,`X86_64 -> f [[]; [`Afl]; [`Flambda]; [`Frame_pointer]]
+    | 4,12,_ -> f [[]; [`Afl]; [`Flambda]]
     | 4,11,_ -> f [[]; [`Afl]; [`Flambda]]
     | 4,10,_ -> f [[]; [`Afl]; [`Flambda]]
     | 4,9,_ -> f [[]; [`Afl]; [`Flambda]]
