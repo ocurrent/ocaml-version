@@ -182,6 +182,12 @@ module Releases = struct
 
   let dev = [ v4_12; v4_13 ]
 
+  let trunk =
+    match dev with
+    | [] -> latest
+    | [v] -> v
+    | _ -> List.hd @@ List.sort (fun x y -> -(compare x y)) dev
+
   let is_dev t =
     let t = with_just_major_and_minor t in
     let dev = List.map with_just_major_and_minor dev in
@@ -367,7 +373,7 @@ module Configure_options = struct
 end
 
 module Sources = struct
-  let trunk = Releases.v4_13
+  let trunk = Releases.trunk
 
   let git_tag ({major; minor; patch; _ } as ov) =
     match major, minor, patch with
@@ -385,23 +391,32 @@ let trunk_variants (arch:arch) =
   List.map (Configure_options.to_t Sources.trunk) (base @ arch_opts)
 
 let compiler_variants arch ({major; minor; _} as t) =
-  let f = List.map (Configure_options.to_t t) in
-  match major,minor,arch with
-    | 4,12,arch  -> trunk_variants arch
-    | 4,11,`X86_64 -> f [[]; [`Afl]; [`Flambda]; [`Frame_pointer]]
-    | 4,10,`X86_64 -> f [[]; [`Afl]; [`Flambda]; [`Frame_pointer]]
-    | 4,9,`X86_64 -> f [[]; [`Afl]; [`Flambda]; [`Frame_pointer]]
-    | 4,8,`X86_64 -> f [[]; [`Afl]; [`Flambda]; [`Frame_pointer]]
-    | 4,11,_ -> f [[]; [`Afl]; [`Flambda]]
-    | 4,10,_ -> f [[]; [`Afl]; [`Flambda]]
-    | 4,9,_ -> f [[]; [`Afl]; [`Flambda]]
-    | 4,8,_ -> f [[]; [`Afl]; [`Flambda]]
-    | 4,7,_ -> f [[]; [`Afl]; [`Flambda]]
-    | 4,6,_ -> f [[]; [`Afl]; [`Flambda]]
-    | 4,5,_ -> f [[]; [`Afl]; [`Flambda]]
-    | 4,4,_ -> f [[]; [`Flambda]]
-    | 4,3,_ -> f [[]; [`Flambda]]
-    | _ -> f [[]]
+  if major = Releases.trunk.major && minor = Releases.trunk.minor then
+    trunk_variants arch
+  else
+    let variants =
+      (* No variants for OCaml < 4.00 *)
+      if major < 4 then []
+      else
+        (* +fp for OCaml 4.08+ on x86_64 *)
+        let variants =
+          if arch = `X86_64 && (major <> 4 || minor >= 8) then
+            [[`Frame_pointer]]
+          else
+            [] in
+        (* +flambda for OCaml 4.03+ *)
+        let variants =
+          if major <> 4 || minor >= 3 then
+            [`Flambda] :: variants
+          else
+            variants in
+        (* +afl for OCaml 4.05+ *)
+        if major <> 4 || minor >= 5 then
+          [`Afl] :: variants
+        else
+          variants in
+    let f = List.map (Configure_options.to_t t) in
+    f ([] :: variants)
 
 module Opam = struct
 
