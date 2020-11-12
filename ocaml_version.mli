@@ -324,6 +324,9 @@ module Releases : sig
   (** [recent_with_dev] are the last eight stable releases of OCaml and the latest
       development branches. *)
 
+  val trunk : t
+  (** [trunk] is the version of the trunk branch in the OCaml repository. *)
+
   val is_dev : t -> bool
   (** [is_dev t] will return true if the release [t] represents a development
       release instead of a stable archive. *)

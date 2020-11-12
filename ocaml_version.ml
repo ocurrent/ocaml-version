@@ -182,6 +182,12 @@ module Releases = struct
 
   let dev = [ v4_12; v4_13 ]
 
+  let trunk =
+    match dev with
+    | [] -> latest
+    | [v] -> v
+    | _ -> List.hd @@ List.sort (fun x y -> -(compare x y)) dev
+
   let is_dev t =
     let t = with_just_major_and_minor t in
     let dev = List.map with_just_major_and_minor dev in
@@ -367,7 +373,7 @@ module Configure_options = struct
 end
 
 module Sources = struct
-  let trunk = Releases.v4_13
+  let trunk = Releases.trunk
 
   let git_tag ({major; minor; patch; _ } as ov) =
     match major, minor, patch with
