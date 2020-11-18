@@ -429,6 +429,10 @@ module Opam : sig
     (** [package t] returns the [(name, version)] pair corresponding to the opam2 package
         for that compiler version. *)
 
+    val additional_packages : t -> string list
+    (** [additional_packages t] returns the list of opam packages which need to
+        be installed in addition to the {!package}[ t]. *)
+
     val name : t -> string
     (** [name t] returns the opam2 package for that compiler version. *)
 

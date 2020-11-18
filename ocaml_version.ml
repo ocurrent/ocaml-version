@@ -423,10 +423,33 @@ module Opam = struct
   module V2 = struct
     let package t =
       match t.extra with
-      | Some extra when Releases.is_dev t -> ("ocaml-variants", Printf.sprintf "%s+trunk+%s" (to_string (without_variant t)) extra)
+      | Some extra when Releases.is_dev t ->
+          let version =
+            let version = to_string (without_variant t) ^ "+trunk" in
+            (* At present, this layout affects 4.12 only *)
+            if t.major = 4 && t.minor = 12 then
+              version
+            else
+              Printf.sprintf "%s+%s" version extra
+          in
+            ("ocaml-variants", version)
       | Some _ -> ("ocaml-variants", to_string t)
       | None when Releases.is_dev t -> ("ocaml-variants", Printf.sprintf "%s+trunk" (to_string t))
       | None -> ("ocaml-base-compiler", to_string t)
+
+    let additional_packages t =
+      if t.major <> 4 || t.minor <> 12 then
+        []
+      else
+        match Configure_options.of_t t with
+        | Ok []
+        | Error _ -> []
+        | Ok options ->
+            let options_only_package =
+              List.map Configure_options.to_string options
+              |> String.concat "-"
+              |> (^) "ocaml-options-only-" in
+            [options_only_package]
 
     let name t =
       let (name, version) = package t in
