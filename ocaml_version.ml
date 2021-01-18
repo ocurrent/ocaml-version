@@ -294,7 +294,9 @@ module Configure_options = struct
     | `Flambda
     | `Force_safe_string
     | `Frame_pointer
-    | `No_naked_pointers ]
+    | `No_naked_pointers
+    | `Mingw of [ `I386 | `X86_64 ]
+    ]
 
   let compare a b =
     (* For backwards compat reasons, fp always comes first. *)
@@ -315,6 +317,7 @@ module Configure_options = struct
     | `Frame_pointer -> "frame pointer"
     | `No_naked_pointers -> "forbid unboxed pointers"
     | `Disable_flat_float_array -> "disable float array unboxing"
+    | `Mingw _ -> "ocaml for windows mingw"
 
   let to_string t =
     match t with
@@ -325,6 +328,8 @@ module Configure_options = struct
     | `Frame_pointer -> "fp"
     | `No_naked_pointers -> "nnp"
     | `Disable_flat_float_array -> "no-flat-float-array"
+    | `Mingw `X86_64 -> "mingw64"
+    | `Mingw `I386 -> "mingw32"
 
   let of_string = function
     | "afl" -> Some `Afl
@@ -334,6 +339,8 @@ module Configure_options = struct
     | "fp" -> Some `Frame_pointer
     | "nnp" -> Some `No_naked_pointers
     | "no-flat-float-array" -> Some `Disable_flat_float_array
+    | "mingw64" -> Some (`Mingw `X86_64)
+    | "mingw32" -> Some (`Mingw `I386)
     | _ -> None
 
   let to_t t = function
@@ -364,6 +371,10 @@ module Configure_options = struct
       | `Frame_pointer -> "--enable-frame-pointers"
       | `No_naked_pointers -> "--disable-naked-pointers"
       | `Disable_flat_float_array -> "--disable-flat-float-array"
+      | `Mingw `X86_64 ->
+         "--host=x86_64-w64-mingw32 CC=x86_64-w64-mingw32-gcc CPP=x86_64-w64-mingw32-cpp"
+      | `Mingw `I386 ->
+         "--host=i686-w64-mingw32 CC=i686-w64-mingw32-gcc CPP=i686-w64-mingw32-cpp"
     else
       match o with
       | `Afl -> "-afl-instrument"
