@@ -177,13 +177,13 @@ module Releases = struct
               v4_05; v4_06; v4_07; v4_08; v4_09;
               v4_10; v4_11; v4_12; v4_13 ]
 
-  let unreleased_betas = [ v4_12 ]
+  let unreleased_betas = []
 
-  let recent = [ v4_02; v4_03; v4_04; v4_05; v4_06; v4_07; v4_08; v4_09; v4_10; v4_11 ]
+  let recent = [ v4_02; v4_03; v4_04; v4_05; v4_06; v4_07; v4_08; v4_09; v4_10; v4_11; v4_12 ]
 
-  let latest = v4_11
+  let latest = v4_12
 
-  let dev = [ v4_12; v4_13 ]
+  let dev = [ v4_13 ]
 
   let trunk =
     match dev with
@@ -394,27 +394,47 @@ let trunk_variants (arch:arch) =
   List.map (Configure_options.to_t Sources.trunk) (base @ arch_opts)
 
 let compiler_variants arch ({major; minor; _} as t) =
-  if major = Releases.trunk.major && minor = Releases.trunk.minor then
+  let variants = [] in
+  let version = (major, minor) in
+  if version = (Releases.trunk.major, Releases.trunk.minor) then
     trunk_variants arch
   else
     let variants =
       (* No variants for OCaml < 4.00 *)
-      if major < 4 then []
+      if version < (4, 00) then []
       else
-        (* +fp for OCaml 4.08+ on x86_64 *)
+        (* +nnp for OCaml 4.12+ *)
         let variants =
-          if arch = `X86_64 && (major <> 4 || minor >= 8) then
-            [[`Frame_pointer]]
+          if version >= (4, 12) then
+            [`No_naked_pointers] :: variants
           else
-            [] in
+            variants in
+        (* +no-flat-float-array for OCaml 4.12+ *)
+        let variants =
+          if version >= (4, 12) then
+            [`Disable_flat_float_array] :: variants
+          else
+            variants in
+        (* +fp+flambda for OCaml 4.12+ on x86_64 *)
+        let variants =
+          if arch = `X86_64 && version >= (4, 12) then
+            [`Frame_pointer;`Flambda] :: variants
+          else
+            variants in
+      (* +fp for OCaml 4.08+ on x86_64 *)
+        let variants =
+          if arch = `X86_64 && version >= (4, 08) then
+            [`Frame_pointer] :: variants
+          else
+            variants in
         (* +flambda for OCaml 4.03+ *)
         let variants =
-          if major <> 4 || minor >= 3 then
+          if version >= (4, 03) then
             [`Flambda] :: variants
           else
             variants in
         (* +afl for OCaml 4.05+ *)
-        if major <> 4 || minor >= 5 then
+        if version >= (4, 05) then
           [`Afl] :: variants
         else
           variants in
