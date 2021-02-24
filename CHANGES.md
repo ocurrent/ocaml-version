@@ -1,6 +1,8 @@
 ## dev
 
 * Add OCaml 4.10.2 and 4.11.1 release. (@avsm)
+* Add Releases.uses_options_packages and update for new opam-repository
+  layout for 4.12+. (@dra27)
 
 ## v3.0.0 (2020-08-23)
 
