@@ -336,6 +336,10 @@ module Releases : sig
   val is_dev : t -> bool
   (** [is_dev t] will return true if the release [t] represents a development
       release instead of a stable archive. *)
+
+  val uses_options_packages : t -> bool
+  (** [uses_options_packages t] will return true if the release [t] uses ocaml-option-*
+      packages in opam-repository, rather than +variant packages *)
 end
 
 (** Values relating to the source code and version control of OCaml *)

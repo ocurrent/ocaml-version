@@ -198,6 +198,8 @@ module Releases = struct
 
   let recent_with_dev = List.concat [recent; dev]
 
+  let uses_options_packages t =
+    t.major > 4 || t.major = 4 && t.minor >= 12
 end
 
 type arch = [ `I386 | `X86_64 | `Aarch64 | `Ppc64le | `Aarch32 ]
@@ -449,21 +451,25 @@ module Opam = struct
       | Some extra when Releases.is_dev t ->
           let version =
             let version = to_string (without_variant t) ^ "+trunk" in
-            (* At present, this layout affects 4.12 only *)
-            if t.major = 4 && t.minor = 12 then
+            if Releases.uses_options_packages t then
               version
             else
               Printf.sprintf "%s+%s" version extra
           in
             ("ocaml-variants", version)
-      | Some _ -> ("ocaml-variants", to_string t)
+      | Some _ ->
+          let t =
+            if Releases.uses_options_packages t then
+              with_variant t (Some "options")
+            else
+              t
+          in
+            ("ocaml-variants", to_string t)
       | None when Releases.is_dev t -> ("ocaml-variants", Printf.sprintf "%s+trunk" (to_string t))
       | None -> ("ocaml-base-compiler", to_string t)
 
     let additional_packages t =
-      if t.major <> 4 || t.minor <> 12 then
-        []
-      else
+      if Releases.uses_options_packages t then
         match Configure_options.of_t t with
         | Ok []
         | Error _ -> []
@@ -473,6 +479,8 @@ module Opam = struct
               |> String.concat "-"
               |> (^) "ocaml-options-only-" in
             [options_only_package]
+      else
+        []
 
     let name t =
       let (name, version) = package t in
