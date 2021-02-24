@@ -290,6 +290,9 @@ module Releases : sig
   val v4_11_1 : t
   (** Version 4.11.1 *)
 
+  val v4_11_2 : t
+  (** Version 4.11.2 *)
+
   val v4_11 : t
   (** Latest release in the 4.11.x series *)
 
