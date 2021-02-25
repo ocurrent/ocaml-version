@@ -337,9 +337,6 @@ module Releases : sig
   (** [is_dev t] will return true if the release [t] represents a development
       release instead of a stable archive. *)
 
-  val uses_options_packages : t -> bool
-  (** [uses_options_packages t] will return true if the release [t] uses ocaml-option-*
-      packages in opam-repository, rather than +variant packages *)
 end
 
 (** Values relating to the source code and version control of OCaml *)
@@ -365,6 +362,10 @@ module Since : sig
   val arch : arch -> t
   (** [arch a] will return the first release of OCaml that the architecture
       was reasonably stably supported on. *)
+
+  val options_packages : t
+  (** [options_packages t] will return the first release of OCaml that uses [ocaml-option-*]
+      packages in opam-repository, rather than +variant packages *)
 end
 
 (** Test whether a release has a given feature. *)
@@ -376,6 +377,10 @@ module Has : sig
 
   val arch : arch -> t -> bool
   (** [arch a t] will return {!true} if architecture [a] is supported on release [t]. *)
+
+  val options_packages : t -> bool
+  (** [options_packages t] will return true if the release [t] uses [ocaml-option-*]
+      packages in opam-repository, rather than +variant packages *)
 end
 
 (** Configuration parameters that affect the behaviour of OCaml at compiler-build-time. *)
@@ -412,12 +417,13 @@ module Configure_options : sig
   val to_configure_flag : t -> o -> string
   (** [to_configure_flag o] returns a string that can be passed to OCaml's [configure] script to activate that feature. *)
 
-  val compare : o -> o -> int
-  (** [compare a b] will return -1 if [a] is < [b], 0 if they are equal, or 1 if [a] > [b]. For backwards
-      compatibility reasons, {!`Frame_pointer} always comes first in comparisons. *)
+  val compare : t -> o -> o -> int
+  (** [compare t a b] will return -1 if [a] is < [b], 0 if they are equal, or 1 if [a] > [b]. For backwards
+      compatibility reasons, {!`Frame_pointer} always comes first in comparisons before OCaml 4.12.0, and
+      is lexically ordered after 4.12.0.  The [t] argument will determine which comparison function to use.  *)
 
-  val equal : o -> o -> bool
-  (** [equal a b] will return {!true} if [a=b] *)
+  val equal : t -> o -> o -> bool
+  (** [equal t a b] will return {!true} if [a=b] for a given OCaml version [t]. *)
 
 end
 
