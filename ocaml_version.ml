@@ -197,7 +197,6 @@ module Releases = struct
     List.mem t dev
 
   let recent_with_dev = List.concat [recent; dev]
-
 end
 
 type arch = [ `I386 | `X86_64 | `Aarch64 | `Ppc64le | `Aarch32 ]
@@ -267,6 +266,8 @@ module Since = struct
     | `X86_64 -> Releases.v4_00_0 (* TODO obviously earlier *)
 
   let autoconf = Releases.v4_08_0
+
+  let options_packages = Releases.v4_12_0
 end
 
 module Has = struct
@@ -285,6 +286,11 @@ module Has = struct
     match compare Since.autoconf v with
     |(-1) | 0 -> true
     |_ -> false
+
+  let options_packages v =
+    match compare Since.options_packages v with
+    |(-1) | 0 -> true
+    |_ -> false
 end
 
 module Configure_options = struct
@@ -296,16 +302,6 @@ module Configure_options = struct
     | `Force_safe_string
     | `Frame_pointer
     | `No_naked_pointers ]
-
-  let compare a b =
-    (* For backwards compat reasons, fp always comes first. *)
-    match a,b with
-    | `Frame_pointer, `Frame_pointer -> 0
-    | `Frame_pointer, _ -> (-1)
-    | _, `Frame_pointer -> 1
-    | a, b -> Stdlib.compare a b
-
-  let equal a b = compare a b = 0
 
   let to_description (t:o) =
     match t with
@@ -337,10 +333,30 @@ module Configure_options = struct
     | "no-flat-float-array" -> Some `Disable_flat_float_array
     | _ -> None
 
+  let compare_pre_options a b =
+    (* For backwards compat reasons, fp always comes first. *)
+    match a,b with
+    | `Frame_pointer, `Frame_pointer -> 0
+    | `Frame_pointer, _ -> (-1)
+    | _, `Frame_pointer -> 1
+    | a, b -> Stdlib.compare a b
+
+  let compare_post_options a b =
+    (* Lexically ordered options since 4.12.0 *)
+    String.compare (to_string a) (to_string b)
+
+  let compare t =
+    if Has.options_packages t then
+      compare_post_options
+    else
+      compare_pre_options
+
+  let equal t a b = compare t a b = 0
+
   let to_t t = function
     | [] -> with_variant t None
     | ol ->
-      List.sort compare ol |> List.map to_string |> String.concat "+" |>
+      List.sort (compare t) ol |> List.map to_string |> String.concat "+" |>
       fun s -> with_variant t (Some s)
 
   let of_t t =
@@ -351,7 +367,7 @@ module Configure_options = struct
       | Some v -> Ok v) |>
     List.fold_left (fun a b ->
       match a, b with
-      | Ok a, Ok b -> Ok (List.sort compare (b :: a))
+      | Ok a, Ok b -> Ok (List.sort (compare t) (b :: a))
       | _, Error b -> Error b
       | Error a, _-> Error a) (Ok [])
 
@@ -449,21 +465,25 @@ module Opam = struct
       | Some extra when Releases.is_dev t ->
           let version =
             let version = to_string (without_variant t) ^ "+trunk" in
-            (* At present, this layout affects 4.12 only *)
-            if t.major = 4 && t.minor = 12 then
+            if Has.options_packages t then
               version
             else
               Printf.sprintf "%s+%s" version extra
           in
             ("ocaml-variants", version)
-      | Some _ -> ("ocaml-variants", to_string t)
+      | Some _ ->
+          let t =
+            if Has.options_packages t then
+              with_variant t (Some "options")
+            else
+              t
+          in
+            ("ocaml-variants", to_string t)
       | None when Releases.is_dev t -> ("ocaml-variants", Printf.sprintf "%s+trunk" (to_string t))
       | None -> ("ocaml-base-compiler", to_string t)
 
     let additional_packages t =
-      if t.major <> 4 || t.minor <> 12 then
-        []
-      else
+      if Has.options_packages t then
         match Configure_options.of_t t with
         | Ok []
         | Error _ -> []
@@ -473,6 +493,8 @@ module Opam = struct
               |> String.concat "-"
               |> (^) "ocaml-options-only-" in
             [options_only_package]
+      else
+        []
 
     let name t =
       let (name, version) = package t in
