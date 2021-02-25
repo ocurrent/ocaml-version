@@ -1,4 +1,4 @@
-## v3.1.0 (2021-02-23)
+## v3.1.0 (2021-02-25)
 
 * Add OCaml 4.11.2 and 4.12.0 (@smorimoto @kit-ty-kate)
 * Add OCaml 4.10.2 and 4.11.1 release. (@avsm)
