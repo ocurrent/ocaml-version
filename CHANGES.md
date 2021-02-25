@@ -1,8 +1,9 @@
 ## dev
 
+* Add OCaml 4.11.2 and 4.12.0 (@smorimoto @kit-ty-kate)
 * Add OCaml 4.10.2 and 4.11.1 release. (@avsm)
-* Add Releases.uses_options_packages and update for new opam-repository
-  layout for 4.12+. (@dra27)
+* Add `Since.options_packages` and update for new opam-repository
+  layout for 4.12+. (@dra27 @avsm)
 
 ## v3.0.0 (2020-08-23)
 
