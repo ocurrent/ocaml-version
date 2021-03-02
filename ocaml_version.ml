@@ -312,7 +312,7 @@ module Configure_options = struct
     | `Force_safe_string -> "force safe string mode"
     | `Frame_pointer -> "frame pointer"
     | `No_naked_pointers -> "forbid unboxed pointers"
-    | `No_naked_pointers_checker -> "forbid unboxed pointers and print a warning"
+    | `No_naked_pointers_checker -> "enable the naked pointers checker"
     | `Disable_flat_float_array -> "disable float array unboxing"
 
   let to_string t =
@@ -424,9 +424,9 @@ let compiler_variants arch ({major; minor; _} as t) =
       (* No variants for OCaml < 4.00 *)
       if version < (4, 00) then []
       else
-        (* +nnpchecker for OCaml 4.12+ *)
+        (* +nnpchecker for OCaml 4.12+ on x86_64 *)
         let variants =
-          if version >= (4, 12) then
+          if arch = `X86_64 && version >= (4, 12) then
             [`No_naked_pointers_checker] :: variants
           else
             variants in
