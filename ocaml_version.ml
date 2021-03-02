@@ -301,7 +301,8 @@ module Configure_options = struct
     | `Flambda
     | `Force_safe_string
     | `Frame_pointer
-    | `No_naked_pointers ]
+    | `No_naked_pointers
+    | `No_naked_pointers_checker ]
 
   let to_description (t:o) =
     match t with
@@ -311,6 +312,7 @@ module Configure_options = struct
     | `Force_safe_string -> "force safe string mode"
     | `Frame_pointer -> "frame pointer"
     | `No_naked_pointers -> "forbid unboxed pointers"
+    | `No_naked_pointers_checker -> "enable the naked pointers checker"
     | `Disable_flat_float_array -> "disable float array unboxing"
 
   let to_string t =
@@ -321,6 +323,7 @@ module Configure_options = struct
     | `Force_safe_string -> "force-safe-string"
     | `Frame_pointer -> "fp"
     | `No_naked_pointers -> "nnp"
+    | `No_naked_pointers_checker -> "nnpchecker"
     | `Disable_flat_float_array -> "no-flat-float-array"
 
   let of_string = function
@@ -330,6 +333,7 @@ module Configure_options = struct
     | "force-safe-string" -> Some `Force_safe_string
     | "fp" -> Some `Frame_pointer
     | "nnp" -> Some `No_naked_pointers
+    | "nnpchecker" -> Some `No_naked_pointers_checker
     | "no-flat-float-array" -> Some `Disable_flat_float_array
     | _ -> None
 
@@ -380,6 +384,7 @@ module Configure_options = struct
       | `Force_safe_string -> "--force-safe-string"
       | `Frame_pointer -> "--enable-frame-pointers"
       | `No_naked_pointers -> "--disable-naked-pointers"
+      | `No_naked_pointers_checker -> "--enable-naked-pointers-checker"
       | `Disable_flat_float_array -> "--disable-flat-float-array"
     else
       match o with
@@ -401,7 +406,7 @@ module Sources = struct
 end
 
 let trunk_variants (arch:arch) =
-  let base = [[]; [`No_naked_pointers]; [`Afl]; [`Flambda]; [`Disable_flat_float_array]] in
+  let base = [[]; [`No_naked_pointers]; [`No_naked_pointers_checker]; [`Afl]; [`Flambda]; [`Disable_flat_float_array]] in
   let arch_opts =
     match arch with
     |`X86_64 -> [[`Frame_pointer]; [`Frame_pointer;`Flambda]]
@@ -419,6 +424,12 @@ let compiler_variants arch ({major; minor; _} as t) =
       (* No variants for OCaml < 4.00 *)
       if version < (4, 00) then []
       else
+        (* +nnpchecker for OCaml 4.12+ on x86_64 *)
+        let variants =
+          if arch = `X86_64 && version >= (4, 12) then
+            [`No_naked_pointers_checker] :: variants
+          else
+            variants in
         (* +nnp for OCaml 4.12+ *)
         let variants =
           if version >= (4, 12) then
