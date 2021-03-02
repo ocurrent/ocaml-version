@@ -1,3 +1,8 @@
+## dev
+
+* Add support for naked pointers checker option and add it to the 4.12+ variants
+  (@kit-ty-kate)
+
 ## v3.1.0 (2021-02-25)
 
 * Add OCaml 4.11.2 and 4.12.0 (@smorimoto @kit-ty-kate)
