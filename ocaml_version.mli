@@ -393,7 +393,8 @@ module Configure_options : sig
     | `Flambda
     | `Force_safe_string
     | `Frame_pointer
-    | `No_naked_pointers ]
+    | `No_naked_pointers
+    | `No_naked_pointers_checker ]
 
   (** Configuration options available at compiler build time. *)
 
