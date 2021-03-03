@@ -406,10 +406,10 @@ module Sources = struct
 end
 
 let trunk_variants (arch:arch) =
-  let base = [[]; [`No_naked_pointers]; [`No_naked_pointers_checker]; [`Afl]; [`Flambda]; [`Disable_flat_float_array]] in
+  let base = [[]; [`No_naked_pointers]; [`Afl]; [`Flambda]; [`Disable_flat_float_array]] in
   let arch_opts =
     match arch with
-    |`X86_64 -> [[`Frame_pointer]; [`Frame_pointer;`Flambda]]
+    |`X86_64 -> [[`Frame_pointer]; [`Frame_pointer;`Flambda]; [`No_naked_pointers_checker]]
     |_ -> []
   in
   List.map (Configure_options.to_t Sources.trunk) (base @ arch_opts)
