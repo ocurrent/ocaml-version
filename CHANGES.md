@@ -1,7 +1,7 @@
 ## dev
 
-* Add support for naked pointers checker option and add it to the 4.12+ variants
-  (@kit-ty-kate)
+* Add support for naked pointers checker option and add it to
+  the 4.12+ variants (@kit-ty-kate @dra27 @avsm)
 
 ## v3.1.0 (2021-02-25)
 
