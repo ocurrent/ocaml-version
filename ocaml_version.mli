@@ -381,6 +381,11 @@ module Has : sig
   val options_packages : t -> bool
   (** [options_packages t] will return true if the release [t] uses [ocaml-option-*]
       packages in opam-repository, rather than +variant packages *)
+
+  val multicore : t -> bool
+  (** [multicore t] will return true if the release [t] has a multicore OCaml fork
+      available for it.  This requires the [https://github.com/ocaml-multicore/multicore-opam]
+      opam switch to be added before the package is available. *)
 end
 
 (** Configuration parameters that affect the behaviour of OCaml at compiler-build-time. *)
@@ -393,6 +398,8 @@ module Configure_options : sig
     | `Flambda
     | `Force_safe_string
     | `Frame_pointer
+    | `Multicore
+    | `Multicore_no_effect_syntax
     | `No_naked_pointers
     | `No_naked_pointers_checker ]
 
@@ -448,7 +455,7 @@ module Opam : sig
 
     val additional_packages : t -> string list
     (** [additional_packages t] returns the list of opam packages which need to
-        be installed in addition to the {!package}[ t]. *)
+        be installed in addition to the {!package} [t]. *)
 
     val name : t -> string
     (** [name t] returns the opam2 package for that compiler version. *)
