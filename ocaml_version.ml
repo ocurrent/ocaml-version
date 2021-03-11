@@ -291,6 +291,11 @@ module Has = struct
     match compare Since.options_packages v with
     |(-1) | 0 -> true
     |_ -> false
+
+  let multicore v =
+    match v.major, v.minor with
+    | 4, 10 -> true
+    | _ -> false
 end
 
 module Configure_options = struct
@@ -301,6 +306,8 @@ module Configure_options = struct
     | `Flambda
     | `Force_safe_string
     | `Frame_pointer
+    | `Multicore
+    | `Multicore_no_effect_syntax
     | `No_naked_pointers
     | `No_naked_pointers_checker ]
 
@@ -311,6 +318,8 @@ module Configure_options = struct
     | `Default_unsafe_string -> "default to unsafe strings"
     | `Force_safe_string -> "force safe string mode"
     | `Frame_pointer -> "frame pointer"
+    | `Multicore -> "experimental multicore parallelism"
+    | `Multicore_no_effect_syntax -> "experimental multicore with syntax matching vanilla OCaml"
     | `No_naked_pointers -> "forbid unboxed pointers"
     | `No_naked_pointers_checker -> "enable the naked pointers checker"
     | `Disable_flat_float_array -> "disable float array unboxing"
@@ -322,6 +331,8 @@ module Configure_options = struct
     | `Default_unsafe_string -> "default-unsafe-string"
     | `Force_safe_string -> "force-safe-string"
     | `Frame_pointer -> "fp"
+    | `Multicore -> "multicore"
+    | `Multicore_no_effect_syntax -> "no-effect-syntax"
     | `No_naked_pointers -> "nnp"
     | `No_naked_pointers_checker -> "nnpchecker"
     | `Disable_flat_float_array -> "no-flat-float-array"
@@ -332,16 +343,21 @@ module Configure_options = struct
     | "default-unsafe-string" -> Some `Default_unsafe_string
     | "force-safe-string" -> Some `Force_safe_string
     | "fp" -> Some `Frame_pointer
+    | "multicore" -> Some `Multicore
+    | "no-effect-syntax" -> Some `Multicore_no_effect_syntax
     | "nnp" -> Some `No_naked_pointers
     | "nnpchecker" -> Some `No_naked_pointers_checker
     | "no-flat-float-array" -> Some `Disable_flat_float_array
     | _ -> None
 
   let compare_pre_options a b =
-    (* For backwards compat reasons, fp always comes first. *)
+    (* For backwards compat reasons, multicore and fp always comes first. *)
     match a,b with
     | `Frame_pointer, `Frame_pointer -> 0
+    | `Multicore, `Multicore -> 0
+    | `Multicore, _ -> (-1)
     | `Frame_pointer, _ -> (-1)
+    | _, `Multicore -> 1
     | _, `Frame_pointer -> 1
     | a, b -> Stdlib.compare a b
 
@@ -375,6 +391,11 @@ module Configure_options = struct
       | _, Error b -> Error b
       | Error a, _-> Error a) (Ok [])
 
+  let of_t_exn t =
+    match of_t t with
+    | Ok v -> v
+    | Error (`Msg m) -> raise (Failure m)
+
   let to_configure_flag t o =
     if Has.autoconf t then
       match o with
@@ -383,6 +404,8 @@ module Configure_options = struct
       | `Default_unsafe_string -> "--enable-default-unsafe-string"
       | `Force_safe_string -> "--force-safe-string"
       | `Frame_pointer -> "--enable-frame-pointers"
+      | `Multicore -> ""
+      | `Multicore_no_effect_syntax -> ""
       | `No_naked_pointers -> "--disable-naked-pointers"
       | `No_naked_pointers_checker -> "--enable-naked-pointers-checker"
       | `Disable_flat_float_array -> "--disable-flat-float-array"
@@ -424,6 +447,12 @@ let compiler_variants arch ({major; minor; _} as t) =
       (* No variants for OCaml < 4.00 *)
       if version < (4, 00) then []
       else
+        (* multicore options for OCaml = 4.10 *)
+        let variants =
+          if arch = `X86_64 && version = (4, 10) then
+            [`Multicore ] :: [`Multicore;`Multicore_no_effect_syntax] :: variants
+          else
+            variants in
         (* +nnpchecker for OCaml 4.12+ on x86_64 *)
         let variants =
           if arch = `X86_64 && version >= (4, 12) then
@@ -483,8 +512,14 @@ module Opam = struct
           in
             ("ocaml-variants", version)
       | Some _ ->
+          let is_multicore =
+             Configure_options.of_t_exn t |> List.mem `Multicore
+          in
           let t =
-            if Has.options_packages t then
+            (* multicore fork packages are at the lowest patch version *)
+            if is_multicore then
+              with_patch t (Some 0)
+            else if Has.options_packages t then
               with_variant t (Some "options")
             else
               t
