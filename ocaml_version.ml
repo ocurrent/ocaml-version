@@ -295,6 +295,7 @@ module Has = struct
   let multicore v =
     match v.major, v.minor with
     | 4, 10 -> true
+    | 4, 12 -> true
     | _ -> false
 end
 
@@ -440,6 +441,7 @@ let trunk_variants (arch:arch) =
 let compiler_variants arch ({major; minor; _} as t) =
   let variants = [] in
   let version = (major, minor) in
+  let version_t = v major minor in
   if version = (Releases.trunk.major, Releases.trunk.minor) then
     trunk_variants arch
   else
@@ -447,9 +449,9 @@ let compiler_variants arch ({major; minor; _} as t) =
       (* No variants for OCaml < 4.00 *)
       if version < (4, 00) then []
       else
-        (* multicore options for OCaml = 4.10 *)
+        (* multicore options for OCaml = 4.10 or 4.12 on x86_64 *)
         let variants =
-          if arch = `X86_64 && version = (4, 10) then
+          if arch = `X86_64 && Has.multicore version_t then
             [`Multicore ] :: [`Multicore;`Multicore_no_effect_syntax] :: variants
           else
             variants in
