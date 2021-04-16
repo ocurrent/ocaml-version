@@ -395,6 +395,8 @@ module Configure_options : sig
     [ `Afl
     | `Default_unsafe_string
     | `Disable_flat_float_array
+    | `Domains
+    | `Effects
     | `Flambda
     | `Force_safe_string
     | `Frame_pointer
@@ -433,6 +435,8 @@ module Configure_options : sig
   val equal : t -> o -> o -> bool
   (** [equal t a b] will return {!true} if [a=b] for a given OCaml version [t]. *)
 
+  val is_multicore : t -> bool
+  (** [is_multicore t] is {!true} if this version is a multicore-capable release. *)
 end
 
 val compiler_variants : arch -> t -> t list
