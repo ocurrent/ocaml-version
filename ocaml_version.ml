@@ -304,6 +304,8 @@ module Configure_options = struct
       `Afl
     | `Default_unsafe_string
     | `Disable_flat_float_array
+    | `Domains
+    | `Effects
     | `Flambda
     | `Force_safe_string
     | `Frame_pointer
@@ -317,6 +319,8 @@ module Configure_options = struct
     | `Afl -> "AFL (fuzzing) support"
     | `Flambda -> "flambda inlining"
     | `Default_unsafe_string -> "default to unsafe strings"
+    | `Domains -> "experimental multicore parallelism"
+    | `Effects -> "effects syntax extensions"
     | `Force_safe_string -> "force safe string mode"
     | `Frame_pointer -> "frame pointer"
     | `Multicore -> "experimental multicore parallelism"
@@ -330,6 +334,8 @@ module Configure_options = struct
     | `Afl -> "afl"
     | `Flambda -> "flambda"
     | `Default_unsafe_string -> "default-unsafe-string"
+    | `Domains -> "domains"
+    | `Effects -> "effects"
     | `Force_safe_string -> "force-safe-string"
     | `Frame_pointer -> "fp"
     | `Multicore -> "multicore"
@@ -342,6 +348,8 @@ module Configure_options = struct
     | "afl" -> Some `Afl
     | "flambda" -> Some `Flambda
     | "default-unsafe-string" -> Some `Default_unsafe_string
+    | "domains" -> Some `Domains
+    | "effects" -> Some `Effects
     | "force-safe-string" -> Some `Force_safe_string
     | "fp" -> Some `Frame_pointer
     | "multicore" -> Some `Multicore
@@ -401,6 +409,8 @@ module Configure_options = struct
     if Has.autoconf t then
       match o with
       | `Afl -> "--with-afl"
+      | `Domains -> ""
+      | `Effects -> ""
       | `Flambda -> "--enable-flambda"
       | `Default_unsafe_string -> "--enable-default-unsafe-string"
       | `Force_safe_string -> "--force-safe-string"
@@ -441,7 +451,6 @@ let trunk_variants (arch:arch) =
 let compiler_variants arch ({major; minor; _} as t) =
   let variants = [] in
   let version = (major, minor) in
-  let version_t = v major minor in
   if version = (Releases.trunk.major, Releases.trunk.minor) then
     trunk_variants arch
   else
@@ -451,10 +460,14 @@ let compiler_variants arch ({major; minor; _} as t) =
       else
         (* multicore options for OCaml = 4.10 or 4.12 on x86_64 *)
         let variants =
-          if arch = `X86_64 && Has.multicore version_t then
-            [`Multicore ] :: [`Multicore;`Multicore_no_effect_syntax] :: variants
-          else
-            variants in
+          match (arch, version) with
+          | (`X86_64, (4, 10)) ->
+            [`Multicore ] :: [`Multicore; `Multicore_no_effect_syntax] :: variants
+          | (`X86_64, (4, 12)) ->
+            [`Domains ] :: [`Domains; `Effects] :: variants
+          | _ ->
+            variants
+        in
         (* +nnpchecker for OCaml 4.12+ on x86_64 *)
         let variants =
           if arch = `X86_64 && version >= (4, 12) then
@@ -515,7 +528,7 @@ module Opam = struct
             ("ocaml-variants", version)
       | Some _ ->
           let is_multicore =
-             Configure_options.of_t_exn t |> List.mem `Multicore
+            Configure_options.of_t_exn t |> (fun opts -> List.mem `Domains opts || List.mem `Multicore opts)
           in
           let t =
             (* multicore fork packages are at the lowest patch version *)

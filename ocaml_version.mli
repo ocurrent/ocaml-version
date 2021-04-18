@@ -385,16 +385,25 @@ module Has : sig
   val multicore : t -> bool
   (** [multicore t] will return true if the release [t] has a multicore OCaml fork
       available for it.  This requires the [https://github.com/ocaml-multicore/multicore-opam]
-      opam switch to be added before the package is available. *)
+      opam switch to be added before the package is available.
+
+      Note that the multicore variants changed between 4.10 and 4.12, and this
+      function returns true for any of them. *)
 end
 
 (** Configuration parameters that affect the behaviour of OCaml at compiler-build-time. *)
 module Configure_options : sig
-
+  (*
+   The variants for multicore changed between 4.10 and 4.12.
+   Multicore and Multicore_no_effect_syntax are used with 4.10 (+multicore and +multicore+no-effect-syntax).
+   Domains and Effects are used with 4.12 (+domains and +domains+effects).
+  *)
   type o =
     [ `Afl
     | `Default_unsafe_string
     | `Disable_flat_float_array
+    | `Domains
+    | `Effects
     | `Flambda
     | `Force_safe_string
     | `Frame_pointer
