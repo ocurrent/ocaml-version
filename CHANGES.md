@@ -2,8 +2,8 @@
 
 * Add support for naked pointers checker option and add it to
   the 4.12+ variants (@kit-ty-kate @dra27 @avsm)
-* Add a multicore and multicore-fibres variant for the experimental
-  forks in 4.10, to aid in CI. (@avsm)
+* Add a multicore and multicore-fibres variants for the experimental
+  forks in 4.10 and 4.12, to aid in CI. (@avsm @ewanmellor)
 
 ## v3.1.0 (2021-02-25)
 
