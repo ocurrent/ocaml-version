@@ -304,6 +304,8 @@ module Configure_options = struct
       `Afl
     | `Default_unsafe_string
     | `Disable_flat_float_array
+    | `Domains
+    | `Effects
     | `Flambda
     | `Force_safe_string
     | `Frame_pointer
@@ -317,6 +319,8 @@ module Configure_options = struct
     | `Afl -> "AFL (fuzzing) support"
     | `Flambda -> "flambda inlining"
     | `Default_unsafe_string -> "default to unsafe strings"
+    | `Domains -> "experimental multicore parallelism"
+    | `Effects -> "experimental multicore parallelism and effects-based concurrency"
     | `Force_safe_string -> "force safe string mode"
     | `Frame_pointer -> "frame pointer"
     | `Multicore -> "experimental multicore parallelism"
@@ -330,6 +334,8 @@ module Configure_options = struct
     | `Afl -> "afl"
     | `Flambda -> "flambda"
     | `Default_unsafe_string -> "default-unsafe-string"
+    | `Domains -> "domains"
+    | `Effects -> "effects"
     | `Force_safe_string -> "force-safe-string"
     | `Frame_pointer -> "fp"
     | `Multicore -> "multicore"
@@ -342,6 +348,8 @@ module Configure_options = struct
     | "afl" -> Some `Afl
     | "flambda" -> Some `Flambda
     | "default-unsafe-string" -> Some `Default_unsafe_string
+    | "domains" -> Some `Domains
+    | "effects" -> Some `Effects
     | "force-safe-string" -> Some `Force_safe_string
     | "fp" -> Some `Frame_pointer
     | "multicore" -> Some `Multicore
@@ -405,8 +413,7 @@ module Configure_options = struct
       | `Default_unsafe_string -> "--enable-default-unsafe-string"
       | `Force_safe_string -> "--force-safe-string"
       | `Frame_pointer -> "--enable-frame-pointers"
-      | `Multicore -> ""
-      | `Multicore_no_effect_syntax -> ""
+      | `Multicore | `Domains | `Effects | `Multicore_no_effect_syntax -> ""
       | `No_naked_pointers -> "--disable-naked-pointers"
       | `No_naked_pointers_checker -> "--enable-naked-pointers-checker"
       | `Disable_flat_float_array -> "--disable-flat-float-array"
@@ -418,6 +425,11 @@ module Configure_options = struct
       | `Force_safe_string -> "-force-safe-string"
       | `Frame_pointer -> "-with-frame-pointer"
       | _ -> ""
+
+  let is_multicore t =
+    of_t_exn t |>
+    List.exists (function |`Multicore |`Domains -> true |_ -> false)
+
 end
 
 module Sources = struct
@@ -441,7 +453,6 @@ let trunk_variants (arch:arch) =
 let compiler_variants arch ({major; minor; _} as t) =
   let variants = [] in
   let version = (major, minor) in
-  let version_t = v major minor in
   if version = (Releases.trunk.major, Releases.trunk.minor) then
     trunk_variants arch
   else
@@ -449,12 +460,16 @@ let compiler_variants arch ({major; minor; _} as t) =
       (* No variants for OCaml < 4.00 *)
       if version < (4, 00) then []
       else
-        (* multicore options for OCaml = 4.10 or 4.12 on x86_64 *)
+        (* multicore options for OCaml = 4.10 on x86_64 *)
         let variants =
-          if arch = `X86_64 && Has.multicore version_t then
-            [`Multicore ] :: [`Multicore;`Multicore_no_effect_syntax] :: variants
-          else
-            variants in
+          match (arch, version) with
+          | (`X86_64, (4, 10)) ->
+            [`Multicore ] :: [`Multicore; `Multicore_no_effect_syntax] :: variants
+          | (`X86_64, (4, 12)) ->
+            [`Domains ] :: [`Domains; `Effects] :: variants
+          | _ ->
+            variants
+        in
         (* +nnpchecker for OCaml 4.12+ on x86_64 *)
         let variants =
           if arch = `X86_64 && version >= (4, 12) then
@@ -502,6 +517,7 @@ let compiler_variants arch ({major; minor; _} as t) =
 module Opam = struct
 
   module V2 = struct
+
     let package t =
       match t.extra with
       | Some extra when Releases.is_dev t ->
@@ -514,12 +530,9 @@ module Opam = struct
           in
             ("ocaml-variants", version)
       | Some _ ->
-          let is_multicore =
-             Configure_options.of_t_exn t |> List.mem `Multicore
-          in
-          let t =
+         let t =
             (* multicore fork packages are at the lowest patch version *)
-            if is_multicore then
+            if Configure_options.is_multicore t then
               with_patch t (Some 0)
             else if Has.options_packages t then
               with_variant t (Some "options")
@@ -531,7 +544,7 @@ module Opam = struct
       | None -> ("ocaml-base-compiler", to_string t)
 
     let additional_packages t =
-      if Has.options_packages t then
+      if Has.options_packages t && not (Configure_options.is_multicore t) then
         match Configure_options.of_t t with
         | Ok []
         | Error _ -> []
