@@ -348,12 +348,12 @@ module Configure_options = struct
     | "afl" -> Some `Afl
     | "flambda" -> Some `Flambda
     | "default-unsafe-string" -> Some `Default_unsafe_string
+    | "domains" -> Some `Domains
+    | "effects" -> Some `Effects
     | "force-safe-string" -> Some `Force_safe_string
     | "fp" -> Some `Frame_pointer
     | "multicore" -> Some `Multicore
     | "no-effect-syntax" -> Some `Multicore_no_effect_syntax
-    | "domains" -> Some `Domains
-    | "effects" -> Some `Effects
     | "nnp" -> Some `No_naked_pointers
     | "nnpchecker" -> Some `No_naked_pointers_checker
     | "no-flat-float-array" -> Some `Disable_flat_float_array
@@ -462,16 +462,14 @@ let compiler_variants arch ({major; minor; _} as t) =
       else
         (* multicore options for OCaml = 4.10 on x86_64 *)
         let variants =
-          if arch = `X86_64 && version = (4, 10) then
-            [`Multicore ] :: [`Multicore;`Multicore_no_effect_syntax] :: variants
-          else
-            variants in
-        (* multicore options for OCaml = 4.12 on x86_64 *)
-        let variants =
-          if arch = `X86_64 && version = (4, 12) then
+          match (arch, version) with
+          | (`X86_64, (4, 10)) ->
+            [`Multicore ] :: [`Multicore; `Multicore_no_effect_syntax] :: variants
+          | (`X86_64, (4, 12)) ->
             [`Domains ] :: [`Domains; `Effects] :: variants
-          else
-            variants in
+          | _ ->
+            variants
+        in
         (* +nnpchecker for OCaml 4.12+ on x86_64 *)
         let variants =
           if arch = `X86_64 && version >= (4, 12) then
