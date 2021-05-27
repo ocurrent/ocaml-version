@@ -294,7 +294,6 @@ module Has = struct
 
   let multicore v =
     match v.major, v.minor with
-    | 4, 10 -> true
     | 4, 12 -> true
     | _ -> false
 end
