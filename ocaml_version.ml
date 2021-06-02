@@ -294,6 +294,7 @@ module Has = struct
 
   let multicore v =
     match v.major, v.minor with
+    | 4, 10 -> true
     | 4, 12 -> true
     | _ -> false
 end
@@ -462,8 +463,6 @@ let compiler_variants arch ({major; minor; _} as t) =
         (* multicore options for OCaml = 4.10 on x86_64 *)
         let variants =
           match (arch, version) with
-          | (`X86_64, (4, 10)) ->
-            [`Multicore ] :: [`Multicore; `Multicore_no_effect_syntax] :: variants
           | (`X86_64, (4, 12)) ->
             [`Domains ] :: [`Domains; `Effects] :: variants
           | _ ->
