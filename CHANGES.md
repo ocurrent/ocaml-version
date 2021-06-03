@@ -1,5 +1,6 @@
 ## dev
 
+* Add 4.14.0 entry (@avsm)
 * Add support for naked pointers checker option and add it to
   the 4.12+ variants (@kit-ty-kate @dra27 @avsm)
 * Add a domains and effects variants for the experimental
