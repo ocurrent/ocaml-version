@@ -202,8 +202,8 @@ module Releases = struct
   let recent_with_dev = List.concat [recent; dev]
 end
 
-type arch = [ `I386 | `X86_64 | `Aarch64 | `Ppc64le | `Aarch32 ]
-let arches = [ `I386; `X86_64; `Aarch64; `Ppc64le; `Aarch32 ]
+type arch = [ `I386 | `X86_64 | `Aarch64 | `Ppc64le | `Aarch32 | `S390x ]
+let arches = [ `I386; `X86_64; `Aarch64; `Ppc64le; `Aarch32; `S390x ]
 
 let arch_is_32bit = function `I386 | `Aarch32 -> true |_ -> false
 
@@ -213,6 +213,7 @@ let string_of_arch = function
   | `X86_64 -> "amd64"
   | `Ppc64le -> "ppc64le"
   | `I386 -> "i386"
+  | `S390x -> "s390x"
 
 let arch_of_string = function
   | "arm64" | "aarch64" -> Ok `Aarch64
@@ -220,6 +221,7 @@ let arch_of_string = function
   | "i386"  | "i686" | "686" | "386" -> Ok `I386
   | "arm32" | "arm32v7" | "aarch32" -> Ok `Aarch32
   | "ppc64le" -> Ok `Ppc64le
+  | "s390x" -> Ok `S390x
   | arch -> Error (`Msg ("Unknown architecture " ^ arch))
 
 let arch_of_string_exn a =
@@ -233,6 +235,7 @@ let to_opam_arch = function
   | `Ppc64le -> "ppc64"
   | `Aarch32 -> "arm32"
   | `Aarch64 -> "arm64"
+  | `S390x -> "s390x"
 
 let of_opam_arch = function
   | "x86_32" -> Some `I386
@@ -240,6 +243,7 @@ let of_opam_arch = function
   | "ppc64" -> Some `Ppc64le
   | "arm32" -> Some `Aarch32
   | "arm64" -> Some `Aarch64
+  | "s390x" -> Some `S390x
   | _ -> None
 
 let to_docker_arch = function
@@ -248,6 +252,7 @@ let to_docker_arch = function
    | `Ppc64le -> "ppc64le"
    | `Aarch32 -> "arm"
    | `Aarch64 -> "arm64"
+   | `S390x -> "s390x"
 
 let of_docker_arch = function
   | "386" -> Some `I386
@@ -255,6 +260,7 @@ let of_docker_arch = function
   | "ppc64le" -> Some `Ppc64le
   | "arm" -> Some `Aarch32
   | "arm64" -> Some `Aarch64
+  | "s390x" -> Some `S390x
   | _ -> None
 
 module Since = struct
@@ -262,11 +268,12 @@ module Since = struct
 
   let arch (a:arch) =
     match a with
-    | `I386 -> Releases.v4_06_0 (* TODO can be earlier *)
+    | `I386 -> Releases.v4_06_0 (* can be earlier, but no demand *)
     | `Aarch32 -> Releases.v4_06_0
     | `Aarch64 -> Releases.v4_05_0
     | `Ppc64le -> Releases.v4_06_0
-    | `X86_64 -> Releases.v4_00_0 (* TODO obviously earlier *)
+    | `S390x -> Releases.v4_10_0 (* can be earlier, but not enough build resources *)
+    | `X86_64 -> Releases.v4_00_0 (* can be earlier, but no demand for earlier versions *)
 
   let autoconf = Releases.v4_08_0
 

@@ -74,9 +74,9 @@ val pp : Format.formatter -> t -> unit [@@ocaml.toplevel_printer]
     These definitions cover the CPU architectures that OCaml
     runs and is supported on. *)
 
-type arch = [ `I386 | `X86_64 | `Aarch64 | `Aarch32 | `Ppc64le ]
+type arch = [ `I386 | `X86_64 | `Aarch64 | `Aarch32 | `Ppc64le | `S390x ]
 (** Type of CPU architectures.
-    TODO: This is currently an incomplete list, and lists just
+    This is currently an incomplete list, and lists just
     those used by the opam test systems. Contributions welcome
     to complete it. *)
 
