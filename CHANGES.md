@@ -1,4 +1,4 @@
-## dev
+## v3.2.0 (2021-07-27)
 
 * Add support for S390x big-endian architectures (@avsm)
 * Add 4.14.0 entry (@avsm)
