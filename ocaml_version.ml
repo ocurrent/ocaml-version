@@ -180,12 +180,11 @@ module Releases = struct
               v4_05; v4_06; v4_07; v4_08; v4_09;
               v4_10; v4_11; v4_12; v4_13; v4_14 ]
 
-  let unreleased_betas = []
-
   let recent = [ v4_02; v4_03; v4_04; v4_05; v4_06; v4_07; v4_08; v4_09; v4_10; v4_11; v4_12 ]
 
   let latest = v4_12
 
+  let unreleased_betas = [ v4_13 ]
   let dev = [ v4_13; v4_14 ]
 
   let trunk =
