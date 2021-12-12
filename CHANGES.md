@@ -3,6 +3,8 @@
 * Remove 4.12+domains and 4.12+domains+effects, they're deprecated.
   (@MisterDA #51)
 
+* Expose 4.00.0 entry and include in all_patches (@dra27 #43)
+
 ## v3.5.0 (2022-07-08)
 
  * Add 4.14 entry (@dra27 #45)

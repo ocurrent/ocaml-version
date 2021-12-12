@@ -188,6 +188,9 @@ val sys_version : t
 (** Values representing official releases of OCaml. *)
 module Releases : sig
 
+  val v4_00_0 : t
+  (** Version 4.00.0 *)
+
   val v4_00_1 : t
   (** Version 4.00.1 *)
 
