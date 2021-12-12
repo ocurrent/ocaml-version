@@ -1,3 +1,7 @@
+## dev
+
+* Expose 4.00.0 entry and include in all_patches (@dra27 #43)
+
 ## v3.4.0 (2021-10-05)
 
 * Add 4.13.1 entry (@Octachron #42)
