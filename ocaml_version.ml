@@ -109,6 +109,38 @@ let without_patch t = { t with patch=None }
 let with_just_major_and_minor t = { t with patch=None; extra=None }
 
 module Releases = struct
+  let v3_07_0 = of_string_exn "3.07"
+  let v3_07_1 = of_string_exn "3.07+1"
+  let v3_07_2 = of_string_exn "3.07+2"
+  let v3_07 = v3_07_2
+
+  let v3_08_0 = of_string_exn "3.08.0"
+  let v3_08_1 = of_string_exn "3.08.1"
+  let v3_08_2 = of_string_exn "3.08.2"
+  let v3_08_3 = of_string_exn "3.08.3"
+  let v3_08_4 = of_string_exn "3.08.4"
+  let v3_08 = v3_08_4
+
+  let v3_09_0 = of_string_exn "3.09.0"
+  let v3_09_1 = of_string_exn "3.09.1"
+  let v3_09_2 = of_string_exn "3.09.2"
+  let v3_09_3 = of_string_exn "3.09.3"
+  let v3_09 = v3_09_3
+
+  let v3_10_0 = of_string_exn "3.10.0"
+  let v3_10_1 = of_string_exn "3.10.1"
+  let v3_10_2 = of_string_exn "3.10.2"
+  let v3_10 = v3_10_2
+
+  let v3_11_0 = of_string_exn "3.11.0"
+  let v3_11_1 = of_string_exn "3.11.1"
+  let v3_11_2 = of_string_exn "3.11.2"
+  let v3_11 = v3_11_2
+
+  let v3_12_0 = of_string_exn "3.12.0"
+  let v3_12_1 = of_string_exn "3.12.1"
+  let v3_12 = v3_12_1
+
   let v4_00_0 = of_string_exn "4.00.0"
   let v4_00_1 = of_string_exn "4.00.1"
   let v4_00 = v4_00_1
@@ -171,6 +203,10 @@ module Releases = struct
   let v4_14 = v4_14_0
 
   let all_patches = [
+    v3_07_0; v3_07_1; v3_07_2; v3_08_0; v3_08_1;
+    v3_08_2; v3_08_3; v3_08_4; v3_09_0; v3_09_1;
+    v3_09_2; v3_09_3; v3_10_0; v3_10_1; v3_10_2;
+    v3_11_0; v3_11_1; v3_11_2; v3_12_0; v3_12_1;
     v4_00_0; v4_00_1; v4_01_0; v4_02_0; v4_02_1;
     v4_02_2; v4_02_3; v4_03_0; v4_04_0; v4_04_1;
     v4_04_2; v4_05_0; v4_06_0; v4_06_1; v4_07_0;
@@ -179,9 +215,11 @@ module Releases = struct
     v4_11_2; v4_12_0; v4_12_1; v4_13_0; v4_13_1;
     v4_14_0 ]
 
-  let all = [ v4_00; v4_01; v4_02; v4_03; v4_04;
-              v4_05; v4_06; v4_07; v4_08; v4_09;
-              v4_10; v4_11; v4_12; v4_13; v4_14 ]
+  let all = [ v3_07; v3_08; v3_09; v3_10; v3_11;
+              v3_12; v4_00; v4_01; v4_02; v4_03;
+              v4_04; v4_05; v4_06; v4_07; v4_08;
+              v4_09; v4_10; v4_11; v4_12; v4_13;
+              v4_14 ]
 
   let recent = [ v4_02; v4_03; v4_04; v4_05; v4_06; v4_07; v4_08; v4_09; v4_10; v4_11; v4_12; v4_13 ]
 
@@ -270,12 +308,12 @@ module Since = struct
 
   let arch (a:arch) =
     match a with
-    | `I386 -> Releases.v4_06_0 (* can be earlier, but no demand *)
+    | `I386 -> Releases.v3_07_0
     | `Aarch32 -> Releases.v4_06_0
     | `Aarch64 -> Releases.v4_05_0
     | `Ppc64le -> Releases.v4_06_0
     | `S390x -> Releases.v4_10_0 (* can be earlier, but not enough build resources *)
-    | `X86_64 -> Releases.v4_00_0 (* can be earlier, but no demand for earlier versions *)
+    | `X86_64 -> Releases.v3_07_0
 
   let autoconf = Releases.v4_08_0
 

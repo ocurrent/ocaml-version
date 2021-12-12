@@ -1,6 +1,7 @@
 ## dev
 
 * Expose 4.00.0 entry and include in all_patches (@dra27 #43)
+* Add 3.07+, to match opam (@dra27 #43)
 
 ## v3.4.0 (2021-10-05)
 
