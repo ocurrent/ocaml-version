@@ -320,11 +320,11 @@ module Releases : sig
   val v4_14 : t
   (** Latest release in the 4.14.x series *)
 
-  val v5_00_0 : t
-  (** Version 5.00.0 *)
+  val v5_0_0 : t
+  (** Version 5.0.0 *)
 
-  val v5_00 : t
-  (** Latest release in the 5.00.x series *)
+  val v5_0 : t
+  (** Latest release in the 5.0.x series *)
 
   val all_patches : t list
   (** [all_patches] is an enumeration of all OCaml releases, including every patch release.
