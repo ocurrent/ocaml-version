@@ -38,11 +38,12 @@ let to_string ?prerelease_sep ?sep v =
   let presep, sep = choose_seps ~prerelease_sep ~sep in
   let prerelease = with_sep ~sep:presep v.prerelease in
   let extra = with_sep ~sep v.extra in
+  let minor_fmt = format_of_string (if v.major >= 5 then "%d" else "%02d") in
   match v.patch with
   | None ->
-    Printf.sprintf "%d.%02d%s%s" v.major v.minor prerelease extra
+    Printf.sprintf "%d.%(%d%)%s%s" v.major minor_fmt v.minor prerelease extra
   | Some patch ->
-    Printf.sprintf "%d.%02d.%d%s%s" v.major v.minor patch prerelease extra
+    Printf.sprintf "%d.%(%d%).%d%s%s" v.major minor_fmt v.minor patch prerelease extra
 
 let parse s =
   let build patch major minor sep extra =
