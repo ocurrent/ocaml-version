@@ -38,11 +38,12 @@ let to_string ?prerelease_sep ?sep v =
   let presep, sep = choose_seps ~prerelease_sep ~sep in
   let prerelease = with_sep ~sep:presep v.prerelease in
   let extra = with_sep ~sep v.extra in
+  let minor_fmt = format_of_string (if v.major >= 5 then "%d" else "%02d") in
   match v.patch with
   | None ->
-    Printf.sprintf "%d.%02d%s%s" v.major v.minor prerelease extra
+    Printf.sprintf "%d.%(%d%)%s%s" v.major minor_fmt v.minor prerelease extra
   | Some patch ->
-    Printf.sprintf "%d.%02d.%d%s%s" v.major v.minor patch prerelease extra
+    Printf.sprintf "%d.%(%d%).%d%s%s" v.major minor_fmt v.minor patch prerelease extra
 
 let parse s =
   let build patch major minor sep extra =
@@ -170,24 +171,29 @@ module Releases = struct
   let v4_14_0 = of_string_exn "4.14.0"
   let v4_14 = v4_14_0
 
+  let v5_0_0 = of_string_exn "5.0.0"
+  let v5_0 = v5_0_0
+
   let all_patches = [
     v4_00_1; v4_01_0; v4_02_0; v4_02_1; v4_02_2;
     v4_02_3; v4_03_0; v4_04_0; v4_04_1; v4_04_2;
     v4_05_0; v4_06_0; v4_06_1; v4_07_0; v4_07_1;
     v4_08_0; v4_08_1; v4_09_0; v4_09_1; v4_10_0;
     v4_10_1; v4_10_2; v4_11_0; v4_11_1; v4_11_2;
-    v4_12_0; v4_12_1; v4_13_0; v4_13_1; v4_14_0 ]
+    v4_12_0; v4_12_1; v4_13_0; v4_13_1; v4_14_0;
+    v5_0_0 ]
 
   let all = [ v4_00; v4_01; v4_02; v4_03; v4_04;
               v4_05; v4_06; v4_07; v4_08; v4_09;
-              v4_10; v4_11; v4_12; v4_13; v4_14 ]
+              v4_10; v4_11; v4_12; v4_13; v4_14;
+              v5_0 ]
 
   let recent = [ v4_02; v4_03; v4_04; v4_05; v4_06; v4_07; v4_08; v4_09; v4_10; v4_11; v4_12; v4_13 ]
 
   let latest = v4_13
 
   let unreleased_betas = [ v4_14 ]
-  let dev = [ v4_14 ]
+  let dev = [ v4_14; v5_0 ]
 
   let trunk =
     match dev with
@@ -453,10 +459,10 @@ module Sources = struct
 end
 
 let trunk_variants (arch:arch) =
-  let base = [[]; [`No_naked_pointers]; [`Afl]; [`Flambda]; [`Disable_flat_float_array]] in
+  let base = [[]; [`Afl]; [`Flambda]; [`Disable_flat_float_array]] in
   let arch_opts =
     match arch with
-    |`X86_64 -> [[`Frame_pointer]; [`Frame_pointer;`Flambda]; [`No_naked_pointers_checker]]
+    |`X86_64 -> [[`Frame_pointer]; [`Frame_pointer;`Flambda]]
     |_ -> []
   in
   List.map (Configure_options.to_t Sources.trunk) (base @ arch_opts)
