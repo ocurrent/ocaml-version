@@ -276,10 +276,10 @@ module Since = struct
   let arch (a:arch) =
     match a with
     | `I386 -> Releases.v4_06_0 (* can be earlier, but no demand *)
-    | `Aarch32 -> Releases.v4_06_0
-    | `Aarch64 -> Releases.v4_05_0
-    | `Ppc64le -> Releases.v4_06_0
-    | `S390x -> Releases.v4_10_0 (* can be earlier, but not enough build resources *)
+    | `Aarch32 -> Releases.v4_02_3
+    | `Aarch64 -> Releases.v4_02_3
+    | `Ppc64le -> Releases.v4_03_0
+    | `S390x -> Releases.v4_03_0
     | `X86_64 -> Releases.v4_00_0 (* can be earlier, but no demand for earlier versions *)
 
   let autoconf = Releases.v4_08_0
