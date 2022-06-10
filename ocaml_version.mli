@@ -326,6 +326,12 @@ module Releases : sig
   val v5_0 : t
   (** Latest release in the 5.0.x series *)
 
+  val v5_1_0 : t
+  (** Version 5.1.0 *)
+
+  val v5_1 : t
+  (** Latest release in the 5.1.x series *)
+
   val all_patches : t list
   (** [all_patches] is an enumeration of all OCaml releases, including every patch release.
       To get the major and minor releases with the latest patch version, use {!all} instead. *)

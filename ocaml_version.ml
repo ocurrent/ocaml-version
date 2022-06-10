@@ -174,6 +174,9 @@ module Releases = struct
   let v5_0_0 = of_string_exn "5.0.0"
   let v5_0 = v5_0_0
 
+  let v5_1_0 = of_string_exn "5.1.0"
+  let v5_1 = v5_1_0
+
   let all_patches = [
     v4_00_1; v4_01_0; v4_02_0; v4_02_1; v4_02_2;
     v4_02_3; v4_03_0; v4_04_0; v4_04_1; v4_04_2;
@@ -181,19 +184,19 @@ module Releases = struct
     v4_08_0; v4_08_1; v4_09_0; v4_09_1; v4_10_0;
     v4_10_1; v4_10_2; v4_11_0; v4_11_1; v4_11_2;
     v4_12_0; v4_12_1; v4_13_0; v4_13_1; v4_14_0;
-    v5_0_0 ]
+    v5_0_0; v5_1_0 ]
 
   let all = [ v4_00; v4_01; v4_02; v4_03; v4_04;
               v4_05; v4_06; v4_07; v4_08; v4_09;
               v4_10; v4_11; v4_12; v4_13; v4_14;
-              v5_0 ]
+              v5_0; v5_1 ]
 
   let recent = [ v4_02; v4_03; v4_04; v4_05; v4_06; v4_07; v4_08; v4_09; v4_10; v4_11; v4_12; v4_13; v4_14 ]
 
   let latest = v4_14
 
-  let unreleased_betas = []
-  let dev = [ v5_0 ]
+  let unreleased_betas = [ v5_0_0 ]
+  let dev = [ v5_0; v5_1 ]
 
   let trunk =
     match dev with
@@ -485,15 +488,15 @@ let compiler_variants arch ({major; minor; _} as t) =
           | _ ->
             variants
         in
-        (* +nnpchecker for OCaml 4.12+ on x86_64 *)
+        (* +nnpchecker for OCaml 4.12-4.14 on x86_64 *)
         let variants =
-          if arch = `X86_64 && version >= (4, 12) then
+          if arch = `X86_64 && version >= (4, 12) && version < (5, 0) then
             [`No_naked_pointers_checker] :: variants
           else
             variants in
-        (* +nnp for OCaml 4.12+ *)
+        (* +nnp for OCaml 4.12-4.14 *)
         let variants =
-          if version >= (4, 12) then
+          if version >= (4, 12) && version < (5, 0) then
             [`No_naked_pointers] :: variants
           else
             variants in
