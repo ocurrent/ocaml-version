@@ -462,13 +462,19 @@ module Sources = struct
 end
 
 let trunk_variants (arch:arch) =
-  let base = [[]; [`Afl]; [`Flambda]; [`Disable_flat_float_array]] in
-  let arch_opts =
+  let base =
+    if arch = `X86_64 || arch = `Aarch64 then
+      [[]; [`Afl]; [`Flambda]; [`Disable_flat_float_array]]
+    else
+      [[]; [`Disable_flat_float_array]]
+  in
+  (* Frame pointers aren't currently supported on trunk *)
+  let _arch_opts =
     match arch with
-    |`X86_64 -> [[`Frame_pointer]; [`Frame_pointer;`Flambda]]
+    |`X86_64 -> [[`Frame_pointer]; [`Frame_pointer; `Flambda]]
     |_ -> []
   in
-  List.map (Configure_options.to_t Sources.trunk) (base @ arch_opts)
+  List.map (Configure_options.to_t Sources.trunk) (base (*@ arch_opts*))
 
 let compiler_variants arch ({major; minor; _} as t) =
   let variants = [] in
