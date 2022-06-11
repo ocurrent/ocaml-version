@@ -514,24 +514,24 @@ let compiler_variants arch ({major; minor; _} as t) =
             variants in
         (* +fp+flambda for OCaml 4.12+ on x86_64 *)
         let variants =
-          if arch = `X86_64 && version >= (4, 12) then
+          if arch = `X86_64 && (version >= (4, 12) && version < (5, 0)) then
             [`Frame_pointer;`Flambda] :: variants
           else
             variants in
       (* +fp for OCaml 4.08+ on x86_64 *)
         let variants =
-          if arch = `X86_64 && version >= (4, 08) then
+          if arch = `X86_64 && (version >= (4, 08) && version < (5, 0)) then
             [`Frame_pointer] :: variants
           else
             variants in
         (* +flambda for OCaml 4.03+ *)
         let variants =
-          if version >= (4, 03) then
+          if version >= (4, 03) && (version < (5, 0) || arch = `X86_64 || arch = `Aarch64) then
             [`Flambda] :: variants
           else
             variants in
         (* +afl for OCaml 4.05+ *)
-        if version >= (4, 05) then
+        if version >= (4, 05) && (version < (5, 0) || arch = `X86_64 || arch = `Aarch64) then
           [`Afl] :: variants
         else
           variants in
