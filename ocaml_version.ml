@@ -289,7 +289,7 @@ module Since = struct
     | `Aarch64 -> Releases.v4_02_3
     | `Ppc64le -> Releases.v4_03_0
     | `S390x -> Releases.v4_03_0
-    | `Riscv64 -> Releases.v4_14_0
+    | `Riscv64 -> Releases.v4_11_0
     | `X86_64 -> Releases.v4_00_0 (* can be earlier, but no demand for earlier versions *)
 
   let autoconf = Releases.v4_08_0
