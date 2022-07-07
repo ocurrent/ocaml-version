@@ -212,8 +212,8 @@ module Releases = struct
   let recent_with_dev = List.concat [recent; dev]
 end
 
-type arch = [ `I386 | `X86_64 | `Aarch64 | `Ppc64le | `Aarch32 | `S390x ]
-let arches = [ `I386; `X86_64; `Aarch64; `Ppc64le; `Aarch32; `S390x ]
+type arch = [ `I386 | `X86_64 | `Aarch64 | `Ppc64le | `Aarch32 | `S390x | `Riscv64 ]
+let arches = [ `I386; `X86_64; `Aarch64; `Ppc64le; `Aarch32; `S390x; `Riscv64 ]
 
 let arch_is_32bit = function `I386 | `Aarch32 -> true |_ -> false
 
@@ -224,6 +224,7 @@ let string_of_arch = function
   | `Ppc64le -> "ppc64le"
   | `I386 -> "i386"
   | `S390x -> "s390x"
+  | `Riscv64 -> "riscv64"
 
 let arch_of_string = function
   | "arm64" | "aarch64" -> Ok `Aarch64
@@ -232,6 +233,7 @@ let arch_of_string = function
   | "arm32" | "arm32v7" | "aarch32" -> Ok `Aarch32
   | "ppc64le" -> Ok `Ppc64le
   | "s390x" -> Ok `S390x
+  | "riscv64" -> Ok `Riscv64
   | arch -> Error (`Msg ("Unknown architecture " ^ arch))
 
 let arch_of_string_exn a =
@@ -246,6 +248,7 @@ let to_opam_arch = function
   | `Aarch32 -> "arm32"
   | `Aarch64 -> "arm64"
   | `S390x -> "s390x"
+  | `Riscv64 -> "riscv64"
 
 let of_opam_arch = function
   | "x86_32" -> Some `I386
@@ -254,6 +257,7 @@ let of_opam_arch = function
   | "arm32" -> Some `Aarch32
   | "arm64" -> Some `Aarch64
   | "s390x" -> Some `S390x
+  | "riscv64" -> Some `Riscv64
   | _ -> None
 
 let to_docker_arch = function
@@ -263,6 +267,7 @@ let to_docker_arch = function
    | `Aarch32 -> "arm"
    | `Aarch64 -> "arm64"
    | `S390x -> "s390x"
+   | `Riscv64 -> "riscv64"
 
 let of_docker_arch = function
   | "386" -> Some `I386
@@ -271,6 +276,7 @@ let of_docker_arch = function
   | "arm" -> Some `Aarch32
   | "arm64" -> Some `Aarch64
   | "s390x" -> Some `S390x
+  | "riscv64" -> Some `Riscv64
   | _ -> None
 
 module Since = struct
@@ -283,6 +289,7 @@ module Since = struct
     | `Aarch64 -> Releases.v4_02_3
     | `Ppc64le -> Releases.v4_03_0
     | `S390x -> Releases.v4_03_0
+    | `Riscv64 -> Releases.v4_11_0
     | `X86_64 -> Releases.v4_00_0 (* can be earlier, but no demand for earlier versions *)
 
   let autoconf = Releases.v4_08_0
