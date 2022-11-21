@@ -95,7 +95,7 @@ val arch_of_string : string -> (arch, [> `Msg of string ]) result
     combinators defined in the [rresult] library. This function
     is liberal and will attempt to understand variants of the
     same architecture.  For example, both [aarch64] and [arm64]
-    are parsed into {!`Aarch64}. *)
+    are parsed into [Aarch64]. *)
 
 val arch_of_string_exn: string -> arch
 (** [arch_of_string_exn t] is the same as {!arch_of_string},
@@ -402,11 +402,11 @@ end
 module Has : sig
 
   val bytes : t -> bool
-  (** [bytes t] will return {!true} if that release has a {!bytes} type.
+  (** [bytes t] will return [true] if that release has a {!bytes} type.
       Note that opam provides a [bytes] compatibility package for older releases. *)
 
   val arch : arch -> t -> bool
-  (** [arch a t] will return {!true} if architecture [a] is supported on release [t]. *)
+  (** [arch a t] will return [true] if architecture [a] is supported on release [t]. *)
 
   val options_packages : t -> bool
   (** [options_packages t] will return true if the release [t] uses [ocaml-option-*]
@@ -414,7 +414,7 @@ module Has : sig
 
   val multicore : t -> bool
   (** [multicore t] will return true if the release [t] has a multicore OCaml fork
-      available for it.  This requires the [https://github.com/ocaml-multicore/multicore-opam]
+      available for it.  This requires the {{: https://github.com/ocaml-multicore/multicore-opam}}
       opam switch to be added before the package is available.
 
       Note that the multicore variants changed between 4.10 and 4.12, and this
@@ -448,7 +448,7 @@ module Configure_options : sig
   (** [to_string o] returns a compact representation of {!o} suitable for use in opam version strings. *)
 
   val of_string : string -> o option
-  (** [of_string s] will parse the output of {!to_string} back into an option {!o}. Returns {!None} if
+  (** [of_string s] will parse the output of {!to_string} back into an option {!o}. Returns [None] if
       the string input is unknown. *)
 
   val of_t : t -> (o list, [> `Msg of string ]) result
@@ -456,7 +456,7 @@ module Configure_options : sig
       represents. Unknown options in the extra field will result in an [Error] being returned. *)
 
   val to_t : t -> o list -> t
-  (* [to_t t ol] will replace the [extra] field of [t] with the list of options represented in [ol]. *)
+  (** [to_t t ol] will replace the [extra] field of [t] with the list of options represented in [ol]. *)
 
   val to_description : o -> string
   (** [to_description o] returns a human-readable representation of {!o}. *)
@@ -466,14 +466,14 @@ module Configure_options : sig
 
   val compare : t -> o -> o -> int
   (** [compare t a b] will return -1 if [a] is < [b], 0 if they are equal, or 1 if [a] > [b]. For backwards
-      compatibility reasons, {!`Frame_pointer} always comes first in comparisons before OCaml 4.12.0, and
+      compatibility reasons, [Frame_pointer] always comes first in comparisons before OCaml 4.12.0, and
       is lexically ordered after 4.12.0.  The [t] argument will determine which comparison function to use.  *)
 
   val equal : t -> o -> o -> bool
-  (** [equal t a b] will return {!true} if [a=b] for a given OCaml version [t]. *)
+  (** [equal t a b] will return [true] if [a=b] for a given OCaml version [t]. *)
 
   val is_multicore : t -> bool
-  (** [is_multicore t] is {!true} if this version is a multicore-capable release. *)
+  (** [is_multicore t] is [true] if this version is a multicore-capable release. *)
 end
 
 val compiler_variants : arch -> t -> t list
