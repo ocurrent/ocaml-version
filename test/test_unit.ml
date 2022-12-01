@@ -31,8 +31,8 @@ let test_compiler_variants =
         Alcotest.(check bool __LOC__ all_ok true) )
   in
   Ocaml_version.Releases.([
-    test "Multicore on 4.12 x86-64" `X86_64 v4_12
-      ~expected:["domains"; "domains+effects"];
+    test "Multicore not on 4.12 x86-64" `X86_64 v4_12
+      ~expect_exists:false ~expected:["domains"; "domains+effects"];
     test "Multicore not on 4.10 i386" `I386 v4_10
       ~expect_exists:false ~expected:["domains"; "multicore"];
     test "Multicore not on 4.12 xi386" `I386 v4_12
