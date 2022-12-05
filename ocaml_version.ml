@@ -493,14 +493,6 @@ let compiler_variants arch ({major; minor; _} as t) =
       (* No variants for OCaml < 4.00 *)
       if version < (4, 00) then []
       else
-        (* multicore options for OCaml = 4.12 on x86_64 *)
-        let variants =
-          match (arch, version) with
-          | (`X86_64, (4, 12)) ->
-            [`Domains ] :: [`Domains; `Effects] :: variants
-          | _ ->
-            variants
-        in
         (* +nnpchecker for OCaml 4.12-4.14 on x86_64 *)
         let variants =
           if arch = `X86_64 && version >= (4, 12) && version < (5, 0) then

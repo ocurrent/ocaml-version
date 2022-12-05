@@ -1,3 +1,8 @@
+## unreleased
+
+* Remove 4.12+domains and 4.12+domains+effects, they're deprecated.
+  (@MisterDA #51)
+
 ## v3.5.0 (2022-07-08)
 
  * Add 4.14 entry (@dra27 #45)
