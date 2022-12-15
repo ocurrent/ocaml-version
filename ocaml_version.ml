@@ -195,6 +195,7 @@ module Releases = struct
 
   let latest = v5_0
 
+  let unreleased_betas = [ ]
   let dev = [ v5_1 ]
 
   let trunk =
