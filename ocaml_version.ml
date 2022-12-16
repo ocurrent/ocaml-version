@@ -473,7 +473,7 @@ let trunk_variants (arch:arch) =
     if arch = `X86_64 || arch = `Aarch64 then
       [[]; [`Afl]; [`Flambda]; [`Disable_flat_float_array]]
     else
-      [[]; [`Disable_flat_float_array]]
+      []
   in
   (* Frame pointers aren't currently supported on trunk *)
   let _arch_opts =
@@ -507,7 +507,8 @@ let compiler_variants arch ({major; minor; _} as t) =
             variants in
         (* +no-flat-float-array for OCaml 4.12+ *)
         let variants =
-          if version >= (4, 12) then
+          if (version >= (5, 0) && (arch = `X86_64 || arch = `Aarch64))
+          || (version >= (4, 12) && version < (5, 0)) then
             [`Disable_flat_float_array] :: variants
           else
             variants in
