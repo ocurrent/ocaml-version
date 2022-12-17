@@ -525,7 +525,8 @@ let compiler_variants arch ({major; minor; _} as t) =
             variants in
         (* +flambda for OCaml 4.03+ *)
         let variants =
-          if version >= (4, 03) && (version < (5, 0) || arch = `X86_64 || arch = `Aarch64) then
+          if ((version >= (4, 03) && arch <> `Aarch64) || version >= (4, 06))
+          && (version < (5, 0) || arch = `X86_64 || arch = `Aarch64) then
             [`Flambda] :: variants
           else
             variants in
