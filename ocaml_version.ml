@@ -530,7 +530,8 @@ let compiler_variants arch ({major; minor; _} as t) =
           else
             variants in
         (* +afl for OCaml 4.05+ *)
-        if version >= (4, 05) && (version < (5, 0) || arch = `X86_64 || arch = `Aarch64) then
+        if ((version >= (4, 05) && arch <> `Aarch64) || version >= (4, 06))
+        && (version < (5, 0) || arch = `X86_64 || arch = `Aarch64) then
           [`Afl] :: variants
         else
           variants in
