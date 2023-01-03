@@ -1,3 +1,3 @@
 (library
- (name ocaml_version) 
+ (name ocaml_version)
  (public_name ocaml-version))
