@@ -188,6 +188,87 @@ val sys_version : t
 (** Values representing official releases of OCaml. *)
 module Releases : sig
 
+  val v3_07_0 : t
+  (** Version 3.07 *)
+
+  val v3_07_1 : t
+  (** Version 3.07+1 *)
+
+  val v3_07_2 : t
+  (** Version 3.07+2 *)
+
+  val v3_07 : t
+  (** Latest release in the 3.07 series *)
+
+  val v3_08_0 : t
+  (** Version 3.08.0 *)
+
+  val v3_08_1 : t
+  (** Version 3.08.1 *)
+
+  val v3_08_2 : t
+  (** Version 3.08.2 *)
+
+  val v3_08_3 : t
+  (** Version 3.08.3 *)
+
+  val v3_08_4 : t
+  (** Version 3.08.4 *)
+
+  val v3_08 : t
+  (** Latest release in the 3.08.x series *)
+
+  val v3_09_0 : t
+  (** Version 3.09.0 *)
+
+  val v3_09_1 : t
+  (** Version 3.09.1 *)
+
+  val v3_09_2 : t
+  (** Version 3.09.2 *)
+
+  val v3_09_3 : t
+  (** Version 3.09.3 *)
+
+  val v3_09 : t
+  (** Latest release in the 3.09.x series *)
+
+  val v3_10_0 : t
+  (** Version 3.10.0 *)
+
+  val v3_10_1 : t
+  (** Version 3.10.1 *)
+
+  val v3_10_2 : t
+  (** Version 3.10.2 *)
+
+  val v3_10 : t
+  (** Latest release in the 3.10.x series *)
+
+  val v3_11_0 : t
+  (** Version 3.11.0 *)
+
+  val v3_11_1 : t
+  (** Version 3.11.1 *)
+
+  val v3_11_2 : t
+  (** Version 3.11.2 *)
+
+  val v3_11 : t
+  (** Latest release in the 3.11.x series *)
+
+  val v3_12_0 : t
+  (** Version 3.12.0 *)
+
+  val v3_12_1 : t
+  (** Version 3.12.1 *)
+
+  val v3_12 : t
+  (** Latest release in the 3.12.x series *)
+
+  val v4_00_0 : t
+  (** Version 4.00.0 *)
+
   val v4_00_1 : t
   (** Version 4.00.1 *)
 
