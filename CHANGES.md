@@ -1,18 +1,19 @@
 ## unreleased
 
+* Add 4.14.1 entry (@avsm #56)
+* Update for OCaml 5.0.0 release (@octachron #52)
 * Remove 4.12+domains and 4.12+domains+effects, they're deprecated.
   (@MisterDA #51)
-
 * Expose 4.00.0 entry and include in all_patches (@dra27 #43)
 * Add 3.07+, to match opam (@dra27 #43)
 
 ## v3.5.0 (2022-07-08)
 
- * Add 4.14 entry (@dra27 #45)
- * Add 5.0 entry (@dra27 @kit-ty-kate #44)
- * Add oldest versions of OCaml that support arm64, ppc64le and s390x (@tmcgilchrist #47)
- * Add 5.1.0 trunk development version (@dra27 #48)
- * Add riscv64 for 4.11 onwards (@mtelvers @dra27 #49)
+* Add 4.14 entry (@dra27 #45)
+* Add 5.0 entry (@dra27 @kit-ty-kate #44)
+* Add oldest versions of OCaml that support arm64, ppc64le and s390x (@tmcgilchrist #47)
+* Add 5.1.0 trunk development version (@dra27 #48)
+* Add riscv64 for 4.11 onwards (@mtelvers @dra27 #49)
 
 ## v3.4.0 (2021-10-05)
 
@@ -113,7 +114,7 @@ Base images:
 * Add more OCaml 4.07.[0,1] functions and mark it as latest stable.
 * Port to Dune from Jbuilder.
 * Add several modules related to compiler configuration, in order
-  to faciliate mechanical generation of opam2 compiler packages.
+  to facilitate mechanical generation of opam2 compiler packages.
 * Drop support for opam 1.2.x in favour of opam 2.0.0.
 * Update opam metadata to 2.0 format.
 
