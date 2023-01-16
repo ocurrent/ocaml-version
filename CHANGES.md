@@ -1,4 +1,4 @@
-## unreleased
+## v3.6.0 (2023-01-16)
 
 * Add 4.14.1 entry (@avsm #56)
 * Update for OCaml 5.0.0 release (@octachron #52)
