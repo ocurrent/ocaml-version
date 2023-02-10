@@ -1,3 +1,7 @@
+## unreleased
+
+* Expose 4.08.1 and 4.14.1 (@MisterDA #60)
+
 ## v3.6.0 (2023-01-16)
 
 * Add 4.14.1 entry (@avsm #56)
