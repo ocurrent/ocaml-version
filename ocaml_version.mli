@@ -339,7 +339,10 @@ module Releases : sig
   (** Latest release in the 4.07.x series *)
 
   val v4_08_0 : t
-  (** Versior 4.08.0 *)
+  (** Version 4.08.0 *)
+
+  val v4_08_1 : t
+  (** Version 4.08.1 *)
 
   val v4_08 : t
   (** Latest release in the 4.08.x series *)
@@ -397,6 +400,9 @@ module Releases : sig
 
   val v4_14_0 : t
   (** Version 4.14.0 *)
+
+  val v4_14_1 : t
+  (** Version 4.14.1 *)
 
   val v4_14 : t
   (** Latest release in the 4.14.x series *)
