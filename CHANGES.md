@@ -1,4 +1,4 @@
-## unreleased
+## v3.6.1 (2023-03-06)
 
 * Expose 4.08.1 and 4.14.1 (@MisterDA #60)
 
