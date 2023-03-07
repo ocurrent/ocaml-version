@@ -558,8 +558,8 @@ module Configure_options : sig
 end
 
 val compiler_variants : arch -> t -> t list
-(** [compiler_variants v] returns a list of configuration options that are available and useful
-    for version [v] of the compiler. *)
+(** [compiler_variants arch v] returns a list of configuration options that are available and useful
+    for version [v] of the compiler on architecture [arch]. *)
 
 val trunk_variants : arch -> t list
 (** [trunk_variants v] returns a list of OCaml version configurations that should be working and tested

@@ -39,5 +39,37 @@ let test_compiler_variants =
       ~expect_exists:false ~expected:["domains"; "multicore"]
   ])
 
+let test_compiler_arches_upper =
+  let test name arch version ~expected =
+    ( name,
+      `Quick,
+      fun () ->
+        let has = Ocaml_version.Has.arch arch version in
+        Alcotest.(check bool __LOC__ has expected) )
+  in
+  Ocaml_version.Releases.([
+    test "x86_64 latest supported" `X86_64 latest ~expected:true;
+    test "aarch64 latest supported" `Aarch64 latest ~expected:true;
+    test "i386 latest unsupported" `I386 latest ~expected:false;
+    test "aarch32 latest unsupported" `Aarch32 latest ~expected:false;
+    test "ppc64le latest unsupported" `Ppc64le latest ~expected:false;
+    test "s390x latest unsupported" `S390x latest ~expected:false;
+    test "riscv64 latest unsupported" `Riscv64 latest ~expected:false;
+    test "i386 5.0 unsupported" `I386 v5_0_0 ~expected:false;
+    test "aarch32 5.0 unsupported" `Aarch32 v5_0_0 ~expected:false;
+    test "ppc64le 5.0 unsupported" `Ppc64le v5_0_0 ~expected:false;
+    test "s390x 5.0 unsupported" `S390x v5_0_0 ~expected:false;
+    test "riscv64 5.0 unsupported" `Riscv64 v5_0_0 ~expected:false;
+    test "i386 4.14 supported" `I386 v4_14 ~expected:true;
+    test "aarch32 4.14 supported" `Aarch32 v4_14 ~expected:true;
+    test "ppc64le 4.14 supported" `Ppc64le v4_14 ~expected:true;
+    test "s390x 4.14 supported" `S390x v4_14 ~expected:true;
+    test "riscv64 4.14 supported" `Riscv64 v4_14 ~expected:true;
+  ])
+
 let () =
-  Alcotest.run "ocaml-version" [ ("Compiler_variants", test_compiler_variants); ("Configure_options", test_configure_options) ]
+  Alcotest.run "ocaml-version" [
+    ("Compiler_variants", test_compiler_variants);
+    ("Configure_options", test_configure_options);
+    ("Compiler_arches_upper", test_compiler_arches_upper)
+  ]

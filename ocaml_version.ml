@@ -335,27 +335,42 @@ module Since = struct
   let options_packages = Releases.v4_12_0
 end
 
-module Has = struct
+module Until = struct
+  let arch (a:arch) =
+    match a with
+    | `I386 -> Releases.v4_14_1
+    | `Aarch32 -> Releases.v4_14_1
+    | `Aarch64 -> Releases.latest
+    | `Ppc64le -> Releases.v4_14_1
+    | `S390x -> Releases.v4_14_1
+    | `Riscv64 -> Releases.v4_14_1
+    | `X86_64 -> Releases.latest
+end
 
+module Has = struct
   let bytes v =
     match compare Since.bytes v with
-    |(-1) | 0 -> true
-    |_ -> false
+    | (-1) | 0 -> true
+    | _ -> false
 
   let arch (a:arch) v =
     match compare (Since.arch a) v with
-    |(-1) | 0 -> true
-    |_ -> false
+    | (-1) -> (
+      match compare (Until.arch a) v with
+      | 0 | 1 -> true
+      | _ -> false)
+    | 0 -> true
+    | _ -> false
 
   let autoconf v =
     match compare Since.autoconf v with
-    |(-1) | 0 -> true
-    |_ -> false
+    | (-1) | 0 -> true
+    | _ -> false
 
   let options_packages v =
     match compare Since.options_packages v with
-    |(-1) | 0 -> true
-    |_ -> false
+    | (-1) | 0 -> true
+    | _ -> false
 
   let multicore v =
     match v.major, v.minor with
