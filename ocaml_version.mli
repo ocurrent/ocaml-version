@@ -479,6 +479,13 @@ module Since : sig
       packages in opam-repository, rather than +variant packages *)
 end
 
+(** Determine the latest release an architecture appears in. *)
+module Until : sig
+  val arch : arch -> t
+  (** [arch a] will return the latest release of OCaml that the architecture
+      is supported on. *)
+end
+
 (** Test whether a release has a given feature. *)
 module Has : sig
 
