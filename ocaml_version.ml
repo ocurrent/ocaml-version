@@ -177,6 +177,9 @@ module Releases = struct
   let v5_1_0 = of_string_exn "5.1.0"
   let v5_1 = v5_1_0
 
+  let v5_2_0 = of_string_exn "5.2.0"
+  let v5_2 = v5_2_0
+
   let all_patches = [
     v4_00_1; v4_01_0; v4_02_0; v4_02_1; v4_02_2;
     v4_02_3; v4_03_0; v4_04_0; v4_04_1; v4_04_2;
@@ -195,8 +198,8 @@ module Releases = struct
 
   let latest = v5_0
 
-  let unreleased_betas = [ ]
-  let dev = [ v5_1 ]
+  let unreleased_betas = [ v5_1 ]
+  let dev = [ v5_1; v5_2 ]
 
   let trunk =
     match dev with
