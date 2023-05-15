@@ -446,11 +446,11 @@ module Releases : sig
   (** [latest] is the most recent stable release of OCaml. *)
 
   val recent : t list
-  (** [recent] is the last eight releases of OCaml, with each at the latest patch level.
+  (** [recent] are the stable OCaml releases since 4.02, with each at the latest patch level.
       This is the set that is most reliably tested in the opam package repository. *)
 
   val recent_with_dev : t list
-  (** [recent_with_dev] are the last eight stable releases of OCaml and the latest
+  (** [recent_with_dev] are the OCaml releases since 4.02 and the latest
       development branches. *)
 
   val trunk : t
