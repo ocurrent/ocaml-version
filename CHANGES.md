@@ -1,3 +1,9 @@
+## v3.6.2 (2023-09-18)
+
+ * OCaml 5.1.0 update (@Octachron #65)
+ * Update code comment on Releases module inline with implementation. (@tmcgilchrist #63)
+ * Put 5.1.0 in beta state and add 5.2.0 (trunk) (@kit-ty-kate #62)
+
 ## v3.6.1 (2023-03-06)
 
 * Expose 4.08.1 and 4.14.1 (@MisterDA #60)
