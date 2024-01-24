@@ -1,3 +1,7 @@
+## unreleased
+
+ * Remove < 4.08 from supported releases (@benmandrew #68) 
+
 ## v3.6.8 (2024-08-23)
 
  * Release for OCaml 5.2.0 (@Octachron #73)
