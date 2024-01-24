@@ -1,3 +1,7 @@
+## v3.6.4 (2024-01-24)
+ 
+ * Add versions for OCaml 5.3 (@Octachron #67)
+
 ## v3.6.3 (2023-12-08)
 
  * Add OCaml 5.1.1 as a patch release (@Octachron #66)
