@@ -434,7 +434,7 @@ module Releases : sig
       each major and minor release. *)
 
   val unreleased_betas : t list
-  (** Enumerates the latest beta / release-candidate versions for each {i
+  (** Enumerates the latest alpha / beta / release-candidate versions for each {i
       unreleased} minor OCaml series. *)
 
   val dev : t list
