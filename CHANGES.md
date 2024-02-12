@@ -1,5 +1,9 @@
+## dev
+
+ * Add 5.2.0~alpha1 to `unreleased_betas` (@benmandrew #69)
+
 ## v3.6.4 (2024-01-24)
- 
+
  * Add versions for OCaml 5.3 (@Octachron #67)
 
 ## v3.6.3 (2023-12-08)
