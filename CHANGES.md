@@ -1,6 +1,7 @@
-## dev
+## v3.6.5 (2024-03-19)
 
  * Add 5.2.0~alpha1 to `unreleased_betas` (@benmandrew #69)
+ * Add OCaml version 4.14.2 and moves the last version of the 4.14 to 4.14.2 (@Octachron #70)
 
 ## v3.6.4 (2024-01-24)
 
