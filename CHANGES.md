@@ -1,4 +1,4 @@
-## v3.6.6 (2024-04-17)
+## v3.6.7 (2024-04-18)
 
  * Add 5.2.0~beta2 to `unreleased_betas`, replacing 5.2.0~alpha1 (@benmandrew #71)
 
