@@ -230,20 +230,20 @@ module Releases = struct
     v4_10_0; v4_10_1; v4_10_2; v4_11_0; v4_11_1;
     v4_11_2; v4_12_0; v4_12_1; v4_13_0; v4_13_1;
     v4_14_0; v4_14_1; v4_14_2; v5_0_0; v5_1_0;
-    v5_1_1 ]
+    v5_1_1; v5_2_0 ]
 
   let all = [ v3_07; v3_08; v3_09; v3_10; v3_11;
               v3_12; v4_00; v4_01; v4_02; v4_03;
               v4_04; v4_05; v4_06; v4_07; v4_08;
               v4_09; v4_10; v4_11; v4_12; v4_13;
-              v4_14; v5_0; v5_1 ]
+              v4_14; v5_0; v5_1; v5_2 ]
 
-  let recent = [ v4_02; v4_03; v4_04; v4_05; v4_06; v4_07; v4_08; v4_09; v4_10; v4_11; v4_12; v4_13; v4_14; v5_0; v5_1 ]
+  let recent = [ v4_02; v4_03; v4_04; v4_05; v4_06; v4_07; v4_08; v4_09; v4_10; v4_11; v4_12; v4_13; v4_14; v5_0; v5_1; v5_2 ]
 
-  let latest = v5_1
+  let latest = v5_2
 
-  let unreleased_betas = [ of_string_exn "5.2.0~rc1" ]
-  let dev = [ v5_3; v5_2 ]
+  let unreleased_betas = [ ]
+  let dev = [ v5_3 ]
 
   let trunk =
     match dev with
