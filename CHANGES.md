@@ -1,4 +1,9 @@
-## v3.6.6 (2024-04-17)
+## v3.6.8 (2024-08-23)
+
+ * Release for OCaml 5.2.0 (@Octachron #73)
+ * OCaml 5.2.0~rc1 (@kit-ty-kate #72)
+
+## v3.6.7 (2024-04-18)
 
  * Add 5.2.0~beta2 to `unreleased_betas`, replacing 5.2.0~alpha1 (@benmandrew #71)
 
