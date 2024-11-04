@@ -1,3 +1,7 @@
+## v3.7.0 (2024-11-04)
+
+ * Release of OCaml 5.3.0~beta1 (@mtelvers #76)
+
 ## v3.6.9 (2024-08-27)
 
  * Release of OCaml 5.3.0~alpha1 (@kit-ty-kate #74)
