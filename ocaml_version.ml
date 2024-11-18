@@ -213,7 +213,8 @@ module Releases = struct
   let v5_1 = v5_1_1
 
   let v5_2_0 = of_string_exn "5.2.0"
-  let v5_2 = v5_2_0
+  let v5_2_1 = of_string_exn "5.2.1"
+  let v5_2 = v5_2_1
 
   let v5_3_0 = of_string_exn "5.3.0"
   let v5_3 = v5_3_0
@@ -233,7 +234,7 @@ module Releases = struct
     v4_10_0; v4_10_1; v4_10_2; v4_11_0; v4_11_1;
     v4_11_2; v4_12_0; v4_12_1; v4_13_0; v4_13_1;
     v4_14_0; v4_14_1; v4_14_2; v5_0_0; v5_1_0;
-    v5_1_1; v5_2_0 ]
+    v5_1_1; v5_2_0; v5_2_1 ]
 
   let all = [ v3_07; v3_08; v3_09; v3_10; v3_11;
               v3_12; v4_00; v4_01; v4_02; v4_03;
