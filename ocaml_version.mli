@@ -425,6 +425,9 @@ module Releases : sig
   val v5_2_0 : t
   (** Version 5.2.0 *)
 
+  val v5_2_1 : t
+  (** Version 5.2.1 *)
+
   val v5_2 : t
   (** Latest release in the 5.2.x series *)
 
