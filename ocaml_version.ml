@@ -246,7 +246,7 @@ module Releases = struct
 
   let latest = v5_2
 
-  let unreleased_betas = [ of_string_exn "5.3.0~beta1" ]
+  let unreleased_betas = [ of_string_exn "5.3.0~rc1" ]
   let dev = [ v5_3; v5_4 ]
 
   let trunk =
