@@ -1,3 +1,6 @@
+## unreleased
+
+ * 4.08 is now the oldest `recent` version  (@shonfeder #81)
 
 ## v3.7.3 (2025-01-08)
 
