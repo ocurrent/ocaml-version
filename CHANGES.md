@@ -1,6 +1,7 @@
 ## v4.0.1 (2025-05-28)
 
- * Release of OCaml 5.4.0~alpha1 (@shonfeder #83)
+ * Add OCaml 5.4.0~alpha1 (@shonfeder #83)
+ * Add OCaml 5.5 trunk version (@Octachron #82)
 
 ## v4.0.0 (2025-03-24)
 
