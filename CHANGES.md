@@ -1,3 +1,7 @@
+## v4.0.1 (2025-05-28)
+
+ * Release of OCaml 5.4.0~alpha1 (@shonfeder #83)
+
 ## v4.0.0 (2025-03-24)
 
  * 4.08 is now the oldest `recent` version  (@shonfeder #81)
