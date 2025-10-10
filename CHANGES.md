@@ -1,3 +1,7 @@
+## v4.0.3 (2025-10-10)
+
+ * Add OCaml 5.4.0 (@Octachron #85)
+
 ## v4.0.2 (2025-10-07)
 
  * Add OCaml 5.4.0~rc1 (@kit-ty-kate #84)
