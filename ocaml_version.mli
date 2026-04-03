@@ -457,6 +457,12 @@ module Releases : sig
   (** [all] is an enumeration of all the OCaml releases, with the latest patch versions in
       each major and minor release. *)
 
+  val significant : t list
+  (*  [significant] is an enumeration of all the OCaml releases against which packages are
+      regularly tested. This includes at least the minimum supported version in the 4.x LTS branch,
+      the latest version in the 4.x LTS branch, and the last three releases in the 5.x series.
+      More versions may be included as well. *)
+
   val unreleased_betas : t list
   (** Enumerates the latest alpha / beta / release-candidate versions for each {i
       unreleased} minor OCaml series. *)

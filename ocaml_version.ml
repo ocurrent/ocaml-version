@@ -248,6 +248,7 @@ module Releases = struct
               v4_14; v5_0; v5_1; v5_2; v5_3; v5_4 ]
 
   let recent = [ v4_08; v4_09; v4_10; v4_11; v4_12; v4_13; v4_14; v5_0; v5_1; v5_2; v5_3; v5_4 ]
+  let significant = [ v4_08; v4_14; v5_2; v5_3; v5_4 ]
 
   let latest = v5_4
 
