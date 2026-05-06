@@ -459,7 +459,7 @@ module Releases : sig
 
   val significant : t list
   (** [significant] is an enumeration of OCaml releases against which packages are
-      regularly tested. This includes a curated base set from the 4.x series, 
+      regularly tested. This includes a curated base set from the 4.x series,
       plus the last two releases from {!all}. *)
 
   val unreleased_betas : t list
@@ -475,7 +475,7 @@ module Releases : sig
   (** [latest] is the most recent stable release of OCaml. *)
 
   val recent : t list
-  (** [recent] are the stable OCaml releases since 4.08, with each at the latest patch level.
+  (** [recent] are the stable OCaml releases since 4.11, with each at the latest patch level.
       This is the set that is most reliably tested in the opam package repository. *)
 
   val recent_with_dev : t list
