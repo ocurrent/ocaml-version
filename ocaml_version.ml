@@ -254,7 +254,7 @@ module Releases = struct
   let significant =
     let last_two = match List.rev all with
       | a :: b :: _ -> [b; a] | _ -> [] in
-    List.sort_uniq compare ([ v4_08; v4_11; v4_14; v5_2 ] @ last_two)
+    List.sort_uniq compare ([ v4_11; v4_14; v5_2 ] @ last_two)
 
   let latest = v5_4
 
