@@ -1,4 +1,4 @@
-## unreleased
+## v4.1.1 (2026-05-12)
 
  * Remove 4.08 from the `significant` releases list; the lowest curated
    version is now 4.11 (@mtelvers)
