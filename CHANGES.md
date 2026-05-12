@@ -1,3 +1,8 @@
+## unreleased
+
+ * Remove 4.08 from the `significant` releases list; the lowest curated
+   version is now 4.11 (@mtelvers)
+
 ## v4.1.0 (2026-04-20)
 
  * Add OCaml 5.6 and 5.5.0~beta1 (@kit-ty-kate #88)
