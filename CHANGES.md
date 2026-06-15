@@ -1,3 +1,7 @@
+## v4.1.2 (2026-06-15)
+
+ * Add OCaml 4.14.4 (@Octachron #91)
+
 ## v4.1.1 (2026-05-12)
 
  * Remove 4.08 from the `significant` releases list; the lowest curated
