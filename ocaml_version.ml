@@ -204,7 +204,8 @@ module Releases = struct
   let v4_14_1 = of_string_exn "4.14.1"
   let v4_14_2 = of_string_exn "4.14.2"
   let v4_14_3 = of_string_exn "4.14.3"
-  let v4_14 = v4_14_3
+  let v4_14_4 = of_string_exn "4.14.4"
+  let v4_14 = v4_14_4
 
   let v5_0_0 = of_string_exn "5.0.0"
   let v5_0 = v5_0_0
