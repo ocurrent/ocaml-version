@@ -244,24 +244,26 @@ module Releases = struct
     v4_11_2; v4_12_0; v4_12_1; v4_13_0; v4_13_1;
     v4_14_0; v4_14_1; v4_14_2; v4_14_3; v4_14_4;
     v5_0_0; v5_1_0; v5_1_1; v5_2_0; v5_2_1;
-    v5_3_0; v5_4_0; v5_4_1 ]
+    v5_3_0; v5_4_0; v5_4_1; v5_5_0 ]
 
   let all = [ v3_07; v3_08; v3_09; v3_10; v3_11;
               v3_12; v4_00; v4_01; v4_02; v4_03;
               v4_04; v4_05; v4_06; v4_07; v4_08;
               v4_09; v4_10; v4_11; v4_12; v4_13;
-              v4_14; v5_0; v5_1; v5_2; v5_3; v5_4 ]
+              v4_14; v5_0; v5_1; v5_2; v5_3; v5_4;
+              v5_5
+            ]
 
-  let recent = [ v4_08; v4_09; v4_10; v4_11; v4_12; v4_13; v4_14; v5_0; v5_1; v5_2; v5_3; v5_4 ]
+  let recent = [ v4_08; v4_09; v4_10; v4_11; v4_12; v4_13; v4_14; v5_0; v5_1; v5_2; v5_3; v5_4; v5_5 ]
   let significant =
     let last_two = match List.rev all with
       | a :: b :: _ -> [b; a] | _ -> [] in
     List.sort_uniq compare ([ v4_11; v4_14; v5_2 ] @ last_two)
 
-  let latest = v5_4
+  let latest = v5_5
 
-  let unreleased_betas = [ of_string_exn "5.5.0~beta1" ]
-  let dev = [ v5_5; v5_6 ]
+  let unreleased_betas = [ ]
+  let dev = [ v5_6 ]
 
   let trunk =
     match dev with
