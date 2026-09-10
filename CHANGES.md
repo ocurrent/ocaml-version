@@ -1,3 +1,7 @@
+## v4.1.4 (2026-09-10)
+
+ * Add OCaml 5.5.1 (@mtelvers #93)
+
 ## v4.1.3 (2026-06-19)
 
  * Add OCaml 5.5.0 (@Octachron #92)

@@ -443,7 +443,7 @@ module Releases : sig
   val v5_3 : t
   (** Latest release in the 5.3.x series *)
 
-    val v5_4_0 : t
+  val v5_4_0 : t
   (** Version 5.4.0 *)
 
   val v5_4_1 : t
@@ -454,6 +454,9 @@ module Releases : sig
 
   val v5_5_0 : t
   (** Version 5.5.0 *)
+
+  val v5_5_1 : t
+  (** Version 5.5.1 *)
 
   val v5_5 : t
   (** Latest release in the 5.5.x series *)
