@@ -458,6 +458,9 @@ module Releases : sig
   val v5_5_1 : t
   (** Version 5.5.1 *)
 
+  val v5_5_2 : t
+  (** Version 5.5.2 *)
+
   val v5_5 : t
   (** Latest release in the 5.5.x series *)
 
